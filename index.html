@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
@@ -37,15 +37,162 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <!-- Chart.js Engine (Local + CDN Fallback) -->
-  <script src="js/chart.min.js"></script>
-  <script>
-    if (!window.Chart) {
-      document.write('<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"><\/script>');
-    }
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
   <!-- Custom Styles -->
-  <link rel="stylesheet" href="css/styles.css">
+  
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+  --neon-cyan: #00f0ff;
+  --neon-violet: #a855f7;
+  --neon-emerald: #10b981;
+  --neon-amber: #f59e0b;
+  --neon-rose: #f43f5e;
+  --bg-space: #070913;
+  --panel-bg: rgba(13, 19, 36, 0.75);
+  --panel-border: rgba(56, 189, 248, 0.18);
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-space);
+  color: #e2e8f0;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(circle at 15% 20%, rgba(14, 165, 233, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 45%),
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+}
+
+/* Glassmorphism Panel */
+.glass-panel {
+  background: var(--panel-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-panel-glow {
+  background: var(--panel-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.12), inset 0 0 15px rgba(0, 240, 255, 0.03);
+}
+
+/* Monospace telemetry typography */
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.font-heading {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Neon Text Glow */
+.text-glow-cyan {
+  text-shadow: 0 0 12px rgba(0, 240, 255, 0.65);
+}
+
+.text-glow-violet {
+  text-shadow: 0 0 12px rgba(168, 85, 247, 0.65);
+}
+
+.text-glow-emerald {
+  text-shadow: 0 0 12px rgba(16, 185, 129, 0.65);
+}
+
+/* Aerospace Slider Styling */
+input[type="range"].aerospace-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, #0284c7 0%, #00f0ff 50%, #a855f7 100%);
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.25);
+}
+
+input[type="range"].aerospace-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid #00f0ff;
+  box-shadow: 0 0 14px #00f0ff, 0 0 6px #ffffff;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="range"].aerospace-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 20px #00f0ff, 0 0 10px #ffffff;
+}
+
+input[type="range"].aerospace-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid #00f0ff;
+  box-shadow: 0 0 14px #00f0ff;
+  cursor: pointer;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #38bdf8;
+}
+
+/* Scanline / HUD Overlay effect */
+.hud-grid-overlay {
+  position: relative;
+  overflow: hidden;
+}
+.hud-grid-overlay::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+  background-size: 100% 4px;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.25;
+}
+
+/* Pulsing radar ring */
+@keyframes radar-pulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 0.4; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.animate-radar {
+  animation: radar-pulse 3s infinite ease-in-out;
+}
+
+</style>
 </head>
 <body class="min-h-screen bg-space-950 text-slate-100 flex flex-col antialiased selection:bg-cyan-500 selection:text-black">
 
@@ -369,7 +516,1915 @@
   </main>
 
   <!-- Application Logic Modules -->
-  <script type="module" src="js/app.js"></script>
+  <script>
+// --- Orbital Physics Engine ---
+/**
+ * Orbital Mechanics Physics Engine
+ * Implements two-body circular orbital mechanics around Earth and customizable celestial bodies.
+ * 
+ * Formulas:
+ *   - Orbital Radius: r = R + h
+ *   - Orbital Speed: v = sqrt(G * M / r)
+ *   - Orbital Period: T = 2 * pi * sqrt(r^3 / (G * M))
+ *   - Orbital Frequency: f = 86400 / T (orbits per 24-hour day)
+ *   - Specific Orbital Energy: epsilon = - (G * M) / (2 * r)
+ *   - Escape Velocity: v_esc = sqrt(2 * G * M / r)
+ *   - Gravitational Acceleration: g(h) = G * M / r^2
+ */
+
+const G_CONSTANT = 6.67430e-11; // m^3 / (kg * s^2)
+
+const CELESTIAL_BODIES = {
+  earth: {
+    id: 'earth',
+    name: 'Earth',
+    mass: 5.97219e24, // kg
+    radius: 6371.0,   // km
+    color: '#00f0ff',
+    glowColor: 'rgba(0, 240, 255, 0.4)',
+    surfaceGravity: 9.807, // m/s^2
+    atmosphereHeight: 100, // km (Karman Line)
+    textureType: 'earth',
+    description: 'Third planet from the Sun; primary hub for human satellite infrastructure.'
+  },
+  moon: {
+    id: 'moon',
+    name: 'Moon (Earth)',
+    mass: 7.342e22, // kg
+    radius: 1737.4,  // km
+    color: '#cbd5e1',
+    glowColor: 'rgba(203, 213, 225, 0.3)',
+    surfaceGravity: 1.62, // m/s^2
+    atmosphereHeight: 0,
+    textureType: 'moon',
+    description: 'Earth’s only natural satellite. Target for the Artemis program and Lunar Gateway.'
+  },
+  mars: {
+    id: 'mars',
+    name: 'Mars',
+    mass: 6.4171e23, // kg
+    radius: 3389.5,  // km
+    color: '#f97316',
+    glowColor: 'rgba(249, 115, 22, 0.35)',
+    surfaceGravity: 3.72, // m/s^2
+    atmosphereHeight: 80,
+    textureType: 'mars',
+    description: 'The Red Planet. Primary target for future interplanetary colonization.'
+  },
+  jupiter: {
+    id: 'jupiter',
+    name: 'Jupiter',
+    mass: 1.8982e27, // kg
+    radius: 69911.0, // km
+    color: '#fbbf24',
+    glowColor: 'rgba(251, 191, 36, 0.35)',
+    surfaceGravity: 24.79, // m/s^2
+    atmosphereHeight: 1000,
+    textureType: 'jupiter',
+    description: 'The solar system’s largest gas giant with extreme gravitational field.'
+  },
+  sun: {
+    id: 'sun',
+    name: 'Sun',
+    mass: 1.9885e30, // kg
+    radius: 696340.0, // km
+    color: '#f59e0b',
+    glowColor: 'rgba(245, 158, 11, 0.6)',
+    surfaceGravity: 274.0, // m/s^2
+    atmosphereHeight: 10000,
+    textureType: 'sun',
+    description: 'Yellow dwarf star at the center of the solar system.'
+  },
+  custom: {
+    id: 'custom',
+    name: 'Custom Body',
+    mass: 5.97219e24,
+    radius: 6371.0,
+    color: '#a855f7',
+    glowColor: 'rgba(168, 85, 247, 0.4)',
+    surfaceGravity: 9.807,
+    atmosphereHeight: 100,
+    textureType: 'custom',
+    description: 'Custom astronomical object defined by user parameters.'
+  }
+};
+
+const STANDARD_PRESETS = [
+  {
+    id: 'leo-iss',
+    name: 'ISS (Low Earth Orbit)',
+    bodyId: 'earth',
+    altitude: 420,
+    classTag: 'LEO',
+    tagColor: 'cyan',
+    description: 'International Space Station orbit; microgravity orbital laboratory.'
+  },
+  {
+    id: 'leo-starlink',
+    name: 'Starlink / Hubble Constellation',
+    bodyId: 'earth',
+    altitude: 550,
+    classTag: 'LEO',
+    tagColor: 'cyan',
+    description: 'Low-latency mega-constellation & high-resolution orbital telescopes.'
+  },
+  {
+    id: 'sso-earth',
+    name: 'Sun-Synchronous Orbit (SSO)',
+    bodyId: 'earth',
+    altitude: 800,
+    classTag: 'SSO',
+    tagColor: 'emerald',
+    description: 'Crosses equator at the same local solar time; ideal for weather & imaging.'
+  },
+  {
+    id: 'meo-gps',
+    name: 'GPS / Galileo Navigation',
+    bodyId: 'earth',
+    altitude: 20200,
+    classTag: 'MEO',
+    tagColor: 'violet',
+    description: 'Semi-synchronous orbit completing 2 orbits per sidereal day.'
+  },
+  {
+    id: 'geo-clarke',
+    name: 'Geostationary Belt (GEO)',
+    bodyId: 'earth',
+    altitude: 35786,
+    classTag: 'GEO',
+    tagColor: 'amber',
+    description: 'Synchronized with Earth rotation; stationary relative to surface.'
+  },
+  {
+    id: 'heo-molniya',
+    name: 'Molniya Orbit (Apogee)',
+    bodyId: 'earth',
+    altitude: 39800,
+    classTag: 'HEO',
+    tagColor: 'rose',
+    description: 'High-apogee orbit providing extended coverage over high northern latitudes.'
+  },
+  {
+    id: 'lunar-orbit',
+    name: 'Moon Distance (Earth Orbit)',
+    bodyId: 'earth',
+    altitude: 384400,
+    classTag: 'CISLUNAR',
+    tagColor: 'indigo',
+    description: 'Average distance of the Moon orbiting the Earth-Moon barycenter.'
+  }
+];
+
+/**
+ * Calculates complete orbital state for given altitude and central body
+ * @param {number} altitudeKm - Altitude above surface in kilometers
+ * @param {object} body - Celestial body object with mass (kg) and radius (km)
+ * @returns {object} Orbital telemetry results
+ */
+function calculateOrbit(altitudeKm, body = CELESTIAL_BODIES.earth) {
+  const h_km = Math.max(0.1, Number(altitudeKm) || 0.1);
+  const R_km = Number(body.radius) || 6371.0;
+  const M_kg = Number(body.mass) || 5.97219e24;
+  
+  // Total orbital radius
+  const r_km = R_km + h_km;
+  const r_m = r_km * 1000;
+  const R_m = R_km * 1000;
+  
+  // Standard Gravitational Parameter: mu = G * M (m^3 / s^2)
+  const mu = G_CONSTANT * M_kg;
+  
+  // Orbital Speed: v = sqrt(G * M / r) [m/s]
+  const v_ms = Math.sqrt(mu / r_m);
+  const v_kms = v_ms / 1000;
+  const v_kmh = v_kms * 3600;
+  const v_mph = v_kmh * 0.621371;
+  const mach = v_ms / 343.0; // Standard sea-level sound speed reference
+  
+  // Orbital Period: T = 2 * pi * sqrt(r^3 / (G * M)) [seconds]
+  const T_sec = 2 * Math.PI * Math.sqrt(Math.pow(r_m, 3) / mu);
+  const T_min = T_sec / 60;
+  const T_hr = T_sec / 3600;
+  const T_days = T_sec / 86400;
+  
+  // Orbital Frequency: f = 86400 / T (orbits per 24 hours)
+  const orbitsPerDay = 86400 / T_sec;
+  
+  // Specific Orbital Energy: epsilon = - mu / (2 * r) [J/kg]
+  const specificEnergy_Jkg = -mu / (2 * r_m);
+  const specificEnergy_MJkg = specificEnergy_Jkg / 1e6;
+  
+  // Escape Velocity at altitude: v_esc = sqrt(2 * G * M / r) [m/s]
+  const v_esc_ms = Math.sqrt((2 * mu) / r_m);
+  const v_esc_kms = v_esc_ms / 1000;
+  
+  // Local Gravitational Acceleration at altitude: g(h) = G * M / r^2 [m/s^2]
+  const g_local = mu / Math.pow(r_m, 2);
+  const surfaceGravity = mu / Math.pow(R_m, 2);
+  const g_ratio = g_local / (surfaceGravity || 9.807);
+  
+  // Drag warning flag
+  const isAtmosphericDrag = body.atmosphereHeight > 0 && h_km < body.atmosphereHeight;
+  
+  return {
+    altitudeKm: h_km,
+    bodyRadiusKm: R_km,
+    totalRadiusKm: r_km,
+    totalRadiusMeters: r_m,
+    bodyMassKg: M_kg,
+    mu: mu,
+    
+    // Velocity
+    speedKms: v_kms,
+    speedKmh: v_kmh,
+    speedMph: v_mph,
+    speedMs: v_ms,
+    mach: mach,
+    
+    // Period
+    periodSec: T_sec,
+    periodMin: T_min,
+    periodHours: T_hr,
+    periodDays: T_days,
+    periodFormatted: formatOrbitalPeriod(T_sec),
+    periodCompact: formatPeriodCompact(T_sec),
+    
+    // Frequency
+    orbitsPerDay: orbitsPerDay,
+    
+    // Advanced Telemetry
+    specificEnergyMJkg: specificEnergy_MJkg,
+    escapeVelocityKms: v_esc_kms,
+    localGravity: g_local,
+    surfaceGravity: surfaceGravity,
+    gravityRatio: g_ratio,
+    
+    // Atmospheric flags
+    isAtmosphericDrag: isAtmosphericDrag,
+    atmosphereHeight: body.atmosphereHeight || 0
+  };
+}
+
+/**
+ * Calculates complete orbital state from a target orbital period (seconds)
+ * Kepler's Third Law Inverse: r = ( (G * M * T^2) / (4 * pi^2) )^(1/3)
+ * @param {number} periodSeconds 
+ * @param {object} body 
+ * @returns {object} Orbital telemetry results
+ */
+function calculateOrbitFromPeriod(periodSeconds, body = CELESTIAL_BODIES.earth) {
+  const M_kg = Number(body.mass) || 5.97219e24;
+  const R_km = Number(body.radius) || 6371.0;
+  const mu = G_CONSTANT * M_kg;
+  
+  const T = Math.max(1, Number(periodSeconds) || 1);
+  const r_m = Math.cbrt((mu * Math.pow(T, 2)) / (4 * Math.pow(Math.PI, 2)));
+  const r_km = r_m / 1000;
+  const h_km = Math.max(0.1, r_km - R_km);
+  
+  return calculateOrbit(h_km, body);
+}
+
+/**
+ * Intelligently formats seconds into human-readable orbital period string
+ * e.g. "1h 32m 48s" or "27d 7h 43m"
+ * @param {number} totalSeconds 
+ * @returns {string} Formatted period string
+ */
+function formatOrbitalPeriod(totalSeconds) {
+  if (isNaN(totalSeconds) || totalSeconds <= 0) return '0 s';
+  
+  const sec = Math.floor(totalSeconds % 60);
+  const totalMin = Math.floor(totalSeconds / 60);
+  const min = totalMin % 60;
+  const totalHours = Math.floor(totalSeconds / 3600);
+  const hours = totalHours % 24;
+  const days = Math.floor(totalSeconds / 86400);
+  
+  if (days > 0) {
+    return `${days}d ${hours}h ${min}m ${sec}s`;
+  }
+  if (totalHours > 0) {
+    return `${totalHours}h ${min}m ${sec}s`;
+  }
+  if (totalMin > 0) {
+    return `${totalMin}m ${sec}s`;
+  }
+  return `${totalSeconds.toFixed(1)}s`;
+}
+
+/**
+ * Compact format for badges or chart labels
+ */
+function formatPeriodCompact(totalSeconds) {
+  if (totalSeconds < 3600) {
+    return `${(totalSeconds / 60).toFixed(1)} min`;
+  } else if (totalSeconds < 86400) {
+    return `${(totalSeconds / 3600).toFixed(2)} hrs`;
+  } else {
+    return `${(totalSeconds / 86400).toFixed(2)} days`;
+  }
+}
+
+/**
+ * Generates an array of points for velocity and period curves over an orbital radius range
+ * @param {object} body 
+ * @param {number} minRadius - Min orbital radius in km (r = R + h_min)
+ * @param {number} maxRadius - Max orbital radius in km (r = R + h_max)
+ * @param {number} steps - Number of sample points
+ * @param {boolean} logarithmic - Whether to sample logarithmically
+ * @returns {Array<{radius: number, altitude: number, speed: number, periodHours: number, periodMin: number}>}
+ */
+function generateOrbitalCurves(body, minRadius = 6471, maxRadius = 50000, steps = 120, logarithmic = false) {
+  const points = [];
+  const R_km = Number(body.radius) || 6371.0;
+  const clampedMin = Math.max(R_km + 10, minRadius);
+  const clampedMax = Math.max(clampedMin + 100, maxRadius);
+  
+  if (logarithmic) {
+    const logMin = Math.log10(clampedMin);
+    const logMax = Math.log10(clampedMax);
+    const stepSize = (logMax - logMin) / (steps - 1);
+    
+    for (let i = 0; i < steps; i++) {
+      const r = Math.pow(10, logMin + i * stepSize);
+      const alt = Math.max(0.1, r - R_km);
+      const orbit = calculateOrbit(alt, body);
+      points.push({
+        radius: r,
+        altitude: alt,
+        speed: orbit.speedKms,
+        periodHours: orbit.periodHours,
+        periodMin: orbit.periodMin
+      });
+    }
+  } else {
+    const stepSize = (clampedMax - clampedMin) / (steps - 1);
+    for (let i = 0; i < steps; i++) {
+      const r = clampedMin + i * stepSize;
+      const alt = Math.max(0.1, r - R_km);
+      const orbit = calculateOrbit(alt, body);
+      points.push({
+        radius: r,
+        altitude: alt,
+        speed: orbit.speedKms,
+        periodHours: orbit.periodHours,
+        periodMin: orbit.periodMin
+      });
+    }
+  }
+  
+  return points;
+}
+
+
+// --- 2D Orbit Visualizer ---
+/**
+ * Real-time 2D Orbital Mechanics Visualizer
+ * Renders celestial body, dynamic satellite orbit, velocity vectors, telemetry lines,
+ * and particles on an HTML5 high-DPI Canvas.
+ */
+
+class OrbitVisualizer {
+  constructor(canvasElement, options = {}) {
+    this.canvas = canvasElement;
+    this.ctx = canvasElement.getContext('2d');
+    
+    // State
+    this.altitudeKm = 420;
+    this.body = options.body || {
+      id: 'earth',
+      name: 'Earth',
+      mass: 5.97219e24,
+      radius: 6371.0,
+      color: '#00f0ff',
+      glowColor: 'rgba(0, 240, 255, 0.4)',
+      atmosphereHeight: 100
+    };
+    
+    // Orbit angle in radians
+    this.orbitAngle = 0;
+    this.planetRotation = 0;
+    this.lastTimestamp = performance.now();
+    
+    // Simulation controls
+    this.simSpeedMultiplier = 100; // default accelerated
+    this.isPaused = false;
+    this.showVectors = true;
+    this.showDimensions = true;
+    this.showAtmosphere = true;
+    
+    // Camera view & Pan/Zoom
+    this.zoom = 1.0;
+    this.targetZoom = 1.0;
+    this.panX = 0;
+    this.panY = 0;
+    this.isDragging = false;
+    this.dragStartX = 0;
+    this.dragStartY = 0;
+    
+    // Beacon animation
+    this.beaconRadius = 0;
+    
+    // Stars background
+    this.stars = this.generateStars(140);
+    
+    // Bindings
+    this.handleResize = this.handleResize.bind(this);
+    this.animate = this.animate.bind(this);
+    
+    this.setupInteractivity();
+    this.handleResize();
+    window.addEventListener('resize', this.handleResize);
+    
+    // Start animation loop
+    this.animFrameId = requestAnimationFrame(this.animate);
+  }
+
+  generateStars(count) {
+    const stars = [];
+    for (let i = 0; i < count; i++) {
+      stars.push({
+        x: Math.random(),
+        y: Math.random(),
+        radius: Math.random() * 1.4 + 0.4,
+        alpha: Math.random() * 0.7 + 0.3,
+        twinkleSpeed: Math.random() * 0.02 + 0.005
+      });
+    }
+    return stars;
+  }
+
+  setupInteractivity() {
+    this.canvas.addEventListener('mousedown', (e) => {
+      this.isDragging = true;
+      this.dragStartX = e.clientX - this.panX;
+      this.dragStartY = e.clientY - this.panY;
+      this.canvas.style.cursor = 'grabbing';
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!this.isDragging) return;
+      this.panX = e.clientX - this.dragStartX;
+      this.panY = e.clientY - this.dragStartY;
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (this.isDragging) {
+        this.isDragging = false;
+        this.canvas.style.cursor = 'grab';
+      }
+    });
+
+    // Touch support for mobile/tablet
+    this.canvas.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        this.isDragging = true;
+        this.dragStartX = e.touches[0].clientX - this.panX;
+        this.dragStartY = e.touches[0].clientY - this.panY;
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!this.isDragging || e.touches.length !== 1) return;
+      this.panX = e.touches[0].clientX - this.dragStartX;
+      this.panY = e.touches[0].clientY - this.dragStartY;
+    }, { passive: true });
+
+    window.addEventListener('touchend', () => {
+      this.isDragging = false;
+    });
+
+    // Zoom on wheel
+    this.canvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
+      this.targetZoom = Math.min(Math.max(this.targetZoom * zoomFactor, 0.02), 50.0);
+    }, { passive: false });
+  }
+
+  handleResize() {
+    const rect = this.canvas.parentElement.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    this.width = rect.width;
+    this.height = Math.max(340, rect.height || 420);
+    
+    this.canvas.width = this.width * dpr;
+    this.canvas.height = this.height * dpr;
+    this.canvas.style.width = `${this.width}px`;
+    this.canvas.style.height = `${this.height}px`;
+    
+    this.ctx.scale(dpr, dpr);
+    this.autoFit();
+  }
+
+  updateState(altitudeKm, body) {
+    const prevBody = this.body;
+    this.altitudeKm = altitudeKm;
+    this.body = body;
+    
+    // If body changed or altitude changed drastically, adapt zoom
+    if (prevBody.id !== body.id) {
+      this.autoFit();
+    }
+  }
+
+  autoFit() {
+    this.panX = 0;
+    this.panY = 0;
+    const totalR = this.body.radius + this.altitudeKm;
+    const minDimension = Math.min(this.width, this.height);
+    // Fit orbit with comfortable margin (padding ~ 18%)
+    const desiredPixelRadius = (minDimension / 2) * 0.72;
+    this.targetZoom = desiredPixelRadius / totalR;
+    this.zoom = this.targetZoom;
+  }
+
+  resetPan() {
+    this.panX = 0;
+    this.panY = 0;
+  }
+
+  setZoom(factor) {
+    this.targetZoom = Math.min(Math.max(this.targetZoom * factor, 0.02), 50.0);
+  }
+
+  setSimSpeed(multiplier) {
+    this.simSpeedMultiplier = multiplier;
+  }
+
+  togglePause() {
+    this.isPaused = !this.isPaused;
+    return this.isPaused;
+  }
+
+  animate(now) {
+    const dt = Math.min((now - this.lastTimestamp) / 1000, 0.1);
+    this.lastTimestamp = now;
+
+    // Smooth zoom interpolation
+    this.zoom += (this.targetZoom - this.zoom) * 0.12;
+
+    // Orbital physics angular velocity
+    // Period T = 2 * pi * sqrt(r^3 / mu)
+    // omega = 2 * pi / T
+    if (!this.isPaused) {
+      const r_meters = (this.body.radius + this.altitudeKm) * 1000;
+      const mu = 6.67430e-11 * this.body.mass;
+      const orbitalPeriod = 2 * Math.PI * Math.sqrt(Math.pow(r_meters, 3) / mu);
+      
+      const realOmega = (2 * Math.PI) / Math.max(orbitalPeriod, 1);
+      // Advance angle based on simulation multiplier
+      this.orbitAngle = (this.orbitAngle + realOmega * dt * this.simSpeedMultiplier) % (2 * Math.PI);
+      
+      // Central body rotation (prograde rotation)
+      this.planetRotation = (this.planetRotation + 0.00007292 * dt * this.simSpeedMultiplier) % (2 * Math.PI);
+      
+      // Radar beacon animation
+      this.beaconRadius = (this.beaconRadius + dt * 25) % 35;
+    }
+
+    this.render();
+    this.animFrameId = requestAnimationFrame(this.animate);
+  }
+
+  render() {
+    const ctx = this.ctx;
+    const w = this.width;
+    const h = this.height;
+    const centerX = w / 2 + this.panX;
+    const centerY = h / 2 + this.panY;
+
+    // Clear background
+    ctx.fillStyle = '#060913';
+    ctx.fillRect(0, 0, w, h);
+
+    // Draw deep space starfield
+    this.renderStarfield(ctx, w, h);
+
+    // Draw aerospace coordinate grid / reticle
+    this.renderGrid(ctx, centerX, centerY, w, h);
+
+    // Calculate pixel radii based on current zoom
+    const bodyPixelRadius = Math.max(this.body.radius * this.zoom, 4);
+    const orbitPixelRadius = (this.body.radius + this.altitudeKm) * this.zoom;
+
+    // 1. Draw atmospheric glow & Kármán line (if applicable)
+    if (this.showAtmosphere && this.body.atmosphereHeight > 0) {
+      const atmoPixelRadius = (this.body.radius + this.body.atmosphereHeight) * this.zoom;
+      
+      // Outer glow
+      const atmoGrad = ctx.createRadialGradient(
+        centerX, centerY, bodyPixelRadius * 0.9,
+        centerX, centerY, atmoPixelRadius * 1.5
+      );
+      atmoGrad.addColorStop(0, this.body.glowColor || 'rgba(0, 240, 255, 0.4)');
+      atmoGrad.addColorStop(0.6, 'rgba(0, 240, 255, 0.12)');
+      atmoGrad.addColorStop(1, 'rgba(0, 240, 255, 0)');
+      
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, atmoPixelRadius * 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = atmoGrad;
+      ctx.fill();
+
+      // Atmospheric boundary line
+      if (atmoPixelRadius - bodyPixelRadius > 2) {
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, atmoPixelRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(0, 240, 255, 0.35)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 4]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    }
+
+    // 2. Draw Orbit Track
+    this.renderOrbitTrack(ctx, centerX, centerY, orbitPixelRadius);
+
+    // 3. Draw Dimension Lines (Radius R, Altitude h)
+    if (this.showDimensions) {
+      this.renderDimensionLines(ctx, centerX, centerY, bodyPixelRadius, orbitPixelRadius);
+    }
+
+    // 4. Draw Central Celestial Body
+    this.renderCentralBody(ctx, centerX, centerY, bodyPixelRadius);
+
+    // 5. Draw Satellite, Velocity & Acceleration Vectors
+    this.renderSatellite(ctx, centerX, centerY, orbitPixelRadius);
+
+    // 6. Draw HUD Telemetry Overlay on Canvas
+    this.renderHUDOverlay(ctx, w, h);
+  }
+
+  renderStarfield(ctx, w, h) {
+    ctx.save();
+    for (const star of this.stars) {
+      const sx = star.x * w;
+      const sy = star.y * h;
+      star.alpha += Math.sin(performance.now() * star.twinkleSpeed) * 0.005;
+      const clampedAlpha = Math.max(0.15, Math.min(0.9, star.alpha));
+      
+      ctx.beginPath();
+      ctx.arc(sx, sy, star.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(226, 232, 240, ${clampedAlpha})`;
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  renderGrid(ctx, cx, cy, w, h) {
+    ctx.save();
+    ctx.strokeStyle = 'rgba(30, 41, 59, 0.45)';
+    ctx.lineWidth = 1;
+
+    // Crosshairs through center
+    ctx.beginPath();
+    ctx.moveTo(cx, 0);
+    ctx.lineTo(cx, h);
+    ctx.moveTo(0, cy);
+    ctx.lineTo(w, cy);
+    ctx.stroke();
+
+    // Radar distance rings
+    const ringSpacing = 100;
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.05)';
+    for (let r = ringSpacing; r < Math.max(w, h); r += ringSpacing) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  renderOrbitTrack(ctx, cx, cy, orbitRadius) {
+    ctx.save();
+    
+    // Outer subtle glow
+    ctx.beginPath();
+    ctx.arc(cx, cy, orbitRadius, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(0, 240, 255, 0.12)';
+    ctx.lineWidth = 6;
+    ctx.stroke();
+
+    // Main orbital trajectory
+    ctx.beginPath();
+    ctx.arc(cx, cy, orbitRadius, 0, Math.PI * 2);
+    ctx.strokeStyle = '#00f0ff';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Direction indicators (subtle dots along orbit)
+    ctx.beginPath();
+    ctx.arc(cx, cy, orbitRadius, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.4)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([2, 18]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.restore();
+  }
+
+  renderDimensionLines(ctx, cx, cy, bodyR, orbitR) {
+    ctx.save();
+    // Dimension line along 45 degree angle
+    const angle = -Math.PI / 4;
+    const cosA = Math.cos(angle);
+    const sinA = Math.sin(angle);
+
+    // Planet Radius line (0 to R)
+    ctx.strokeStyle = 'rgba(148, 163, 184, 0.5)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([2, 2]);
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + bodyR * cosA, cy + bodyR * sinA);
+    ctx.stroke();
+
+    // Altitude Line (R to r)
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(cx + bodyR * cosA, cy + bodyR * sinA);
+    ctx.lineTo(cx + orbitR * cosA, cy + orbitR * sinA);
+    ctx.stroke();
+
+    // End ticks
+    const tickLen = 4;
+    const perpX = -sinA * tickLen;
+    const perpY = cosA * tickLen;
+
+    ctx.beginPath();
+    ctx.moveTo(cx + bodyR * cosA - perpX, cy + bodyR * sinA - perpY);
+    ctx.lineTo(cx + bodyR * cosA + perpX, cy + bodyR * sinA + perpY);
+    ctx.moveTo(cx + orbitR * cosA - perpX, cy + orbitR * sinA - perpY);
+    ctx.lineTo(cx + orbitR * cosA + perpX, cy + orbitR * sinA + perpY);
+    ctx.stroke();
+
+    // Altitude label
+    if (orbitR - bodyR > 18) {
+      const midX = cx + ((bodyR + orbitR) / 2) * cosA;
+      const midY = cy + ((bodyR + orbitR) / 2) * sinA;
+      
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+      ctx.fillRect(midX + 8, midY - 10, 84, 18);
+      ctx.strokeStyle = '#38bdf8';
+      ctx.strokeRect(midX + 8, midY - 10, 84, 18);
+
+      ctx.font = '10px "JetBrains Mono", monospace';
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillText(`h = ${Math.round(this.altitudeKm).toLocaleString()} km`, midX + 12, midY + 3);
+    }
+
+    ctx.restore();
+  }
+
+  renderCentralBody(ctx, cx, cy, radius) {
+    ctx.save();
+
+    // Body shadow / 3D shading gradient
+    const lightAngle = -Math.PI / 3;
+    const lightX = cx + Math.cos(lightAngle) * radius * 0.45;
+    const lightY = cy + Math.sin(lightAngle) * radius * 0.45;
+
+    const bodyGrad = ctx.createRadialGradient(
+      lightX, lightY, radius * 0.05,
+      cx, cy, radius
+    );
+
+    if (this.body.id === 'earth') {
+      bodyGrad.addColorStop(0, '#38bdf8');
+      bodyGrad.addColorStop(0.3, '#0284c7');
+      bodyGrad.addColorStop(0.7, '#0f172a');
+      bodyGrad.addColorStop(1, '#020617');
+    } else if (this.body.id === 'mars') {
+      bodyGrad.addColorStop(0, '#fdba74');
+      bodyGrad.addColorStop(0.4, '#ea580c');
+      bodyGrad.addColorStop(0.8, '#7c2d12');
+      bodyGrad.addColorStop(1, '#180703');
+    } else if (this.body.id === 'moon') {
+      bodyGrad.addColorStop(0, '#f1f5f9');
+      bodyGrad.addColorStop(0.5, '#94a3b8');
+      bodyGrad.addColorStop(0.85, '#334155');
+      bodyGrad.addColorStop(1, '#0f172a');
+    } else if (this.body.id === 'jupiter') {
+      bodyGrad.addColorStop(0, '#fef08a');
+      bodyGrad.addColorStop(0.35, '#d97706');
+      bodyGrad.addColorStop(0.7, '#92400e');
+      bodyGrad.addColorStop(1, '#451a03');
+    } else if (this.body.id === 'sun') {
+      bodyGrad.addColorStop(0, '#ffffff');
+      bodyGrad.addColorStop(0.2, '#fef08a');
+      bodyGrad.addColorStop(0.6, '#f59e0b');
+      bodyGrad.addColorStop(1, '#b45309');
+    } else {
+      bodyGrad.addColorStop(0, '#c084fc');
+      bodyGrad.addColorStop(0.5, '#7e22ce');
+      bodyGrad.addColorStop(1, '#1e1b4b');
+    }
+
+    // Draw main body sphere
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.fillStyle = bodyGrad;
+    ctx.fill();
+
+    // Procedural surface details (continents/craters/bands) if radius is large enough
+    if (radius > 16) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.clip();
+
+      // Rotate surface according to planet rotation
+      ctx.translate(cx, cy);
+      ctx.rotate(this.planetRotation);
+
+      if (this.body.id === 'earth') {
+        // Draw stylized continents
+        ctx.fillStyle = 'rgba(34, 197, 94, 0.45)';
+        ctx.beginPath();
+        ctx.arc(-radius * 0.3, -radius * 0.2, radius * 0.38, 0, Math.PI * 2);
+        ctx.arc(radius * 0.35, radius * 0.25, radius * 0.45, 0, Math.PI * 2);
+        ctx.arc(radius * 0.1, -radius * 0.4, radius * 0.25, 0, Math.PI * 2);
+        ctx.fill();
+
+        // White polar caps
+        ctx.fillStyle = 'rgba(248, 250, 252, 0.85)';
+        ctx.beginPath();
+        ctx.arc(0, -radius * 0.88, radius * 0.32, 0, Math.PI * 2);
+        ctx.arc(0, radius * 0.88, radius * 0.28, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (this.body.id === 'jupiter') {
+        // Jovian cloud bands
+        ctx.fillStyle = 'rgba(120, 53, 15, 0.35)';
+        for (let b = -radius * 0.8; b < radius * 0.8; b += radius * 0.3) {
+          ctx.fillRect(-radius, b, radius * 2, radius * 0.12);
+        }
+        // Great Red Spot
+        ctx.fillStyle = 'rgba(185, 28, 28, 0.7)';
+        ctx.beginPath();
+        ctx.ellipse(radius * 0.3, radius * 0.2, radius * 0.22, radius * 0.14, 0, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (this.body.id === 'moon') {
+        // Lunar impact craters
+        ctx.fillStyle = 'rgba(51, 65, 85, 0.5)';
+        ctx.beginPath();
+        ctx.arc(-radius * 0.4, -radius * 0.2, radius * 0.18, 0, Math.PI * 2);
+        ctx.arc(radius * 0.3, radius * 0.3, radius * 0.22, 0, Math.PI * 2);
+        ctx.arc(radius * 0.1, -radius * 0.45, radius * 0.14, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    // Equatorial guideline & axis
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cx - radius, cy);
+    ctx.lineTo(cx + radius, cy);
+    ctx.stroke();
+
+    // Central body label
+    ctx.font = '600 11px "Space Grotesk", sans-serif';
+    ctx.fillStyle = '#f8fafc';
+    ctx.textAlign = 'center';
+    ctx.fillText(this.body.name.toUpperCase(), cx, cy + 4);
+
+    ctx.restore();
+  }
+
+  renderSatellite(ctx, cx, cy, orbitRadius) {
+    ctx.save();
+    const satX = cx + Math.cos(this.orbitAngle) * orbitRadius;
+    const satY = cy + Math.sin(this.orbitAngle) * orbitRadius;
+
+    // 1. Radar telemetry ping wave
+    ctx.beginPath();
+    ctx.arc(satX, satY, this.beaconRadius, 0, Math.PI * 2);
+    const waveAlpha = Math.max(0, 1 - this.beaconRadius / 35);
+    ctx.strokeStyle = `rgba(0, 240, 255, ${waveAlpha * 0.6})`;
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    // 2. Velocity vector arrow (tangent to orbit)
+    if (this.showVectors) {
+      // Tangent direction is (-sin(theta), cos(theta))
+      const tanX = -Math.sin(this.orbitAngle);
+      const tanY = Math.cos(this.orbitAngle);
+      const vecLength = 55;
+      const arrowTipX = satX + tanX * vecLength;
+      const arrowTipY = satY + tanY * vecLength;
+
+      ctx.strokeStyle = '#10b981'; // Green for velocity
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(satX, satY);
+      ctx.lineTo(arrowTipX, arrowTipY);
+      ctx.stroke();
+
+      // Arrow head
+      const arrowAngle = Math.atan2(tanY, tanX);
+      const headLen = 8;
+      ctx.fillStyle = '#10b981';
+      ctx.beginPath();
+      ctx.moveTo(arrowTipX, arrowTipY);
+      ctx.lineTo(
+        arrowTipX - headLen * Math.cos(arrowAngle - Math.PI / 6),
+        arrowTipY - headLen * Math.sin(arrowAngle - Math.PI / 6)
+      );
+      ctx.lineTo(
+        arrowTipX - headLen * Math.cos(arrowAngle + Math.PI / 6),
+        arrowTipY - headLen * Math.sin(arrowAngle + Math.PI / 6)
+      );
+      ctx.closePath();
+      ctx.fill();
+
+      // Velocity label badge
+      ctx.font = '10px "JetBrains Mono", monospace';
+      ctx.fillStyle = '#10b981';
+      ctx.fillText('v⃗ (velocity)', arrowTipX + 8, arrowTipY + 4);
+
+      // 3. Gravitational acceleration vector (inward towards center)
+      const radX = (cx - satX) / orbitRadius;
+      const radY = (cy - satY) / orbitRadius;
+      const gVecLen = 35;
+      const gTipX = satX + radX * gVecLen;
+      const gTipY = satY + radY * gVecLen;
+
+      ctx.strokeStyle = '#f43f5e'; // Rose/Red for gravity
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(satX, satY);
+      ctx.lineTo(gTipX, gTipY);
+      ctx.stroke();
+
+      const gAngle = Math.atan2(radY, radX);
+      ctx.fillStyle = '#f43f5e';
+      ctx.beginPath();
+      ctx.moveTo(gTipX, gTipY);
+      ctx.lineTo(
+        gTipX - 6 * Math.cos(gAngle - Math.PI / 6),
+        gTipY - 6 * Math.sin(gAngle - Math.PI / 6)
+      );
+      ctx.lineTo(
+        gTipX - 6 * Math.cos(gAngle + Math.PI / 6),
+        gTipY - 6 * Math.sin(gAngle + Math.PI / 6)
+      );
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = '#f43f5e';
+      ctx.fillText('g⃗ (gravity)', gTipX - 12, gTipY - 6);
+    }
+
+    // 4. Stylized Satellite Body
+    ctx.translate(satX, satY);
+    ctx.rotate(this.orbitAngle + Math.PI / 2); // Orient along travel direction
+
+    // Solar panels (left & right wings)
+    ctx.fillStyle = '#0284c7';
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 1;
+    
+    // Left solar array
+    ctx.fillRect(-18, -4, 11, 8);
+    ctx.strokeRect(-18, -4, 11, 8);
+    
+    // Right solar array
+    ctx.fillRect(7, -4, 11, 8);
+    ctx.strokeRect(7, -4, 11, 8);
+
+    // Central satellite bus / chassis
+    ctx.fillStyle = '#e2e8f0';
+    ctx.fillRect(-5, -6, 10, 12);
+    ctx.strokeStyle = '#00f0ff';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(-5, -6, 10, 12);
+
+    // Antenna dish
+    ctx.beginPath();
+    ctx.arc(0, -9, 3, Math.PI, 0);
+    ctx.strokeStyle = '#f8fafc';
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  renderHUDOverlay(ctx, w, h) {
+    ctx.save();
+    
+    // Status Indicator
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+    ctx.fillRect(14, 14, 170, 32);
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.3)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(14, 14, 170, 32);
+
+    // Pulsing green LED dot
+    const isLive = !this.isPaused;
+    ctx.beginPath();
+    ctx.arc(28, 30, 4, 0, Math.PI * 2);
+    ctx.fillStyle = isLive ? '#22c55e' : '#f59e0b';
+    ctx.fill();
+
+    ctx.font = '600 11px "Space Grotesk", sans-serif';
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillText(isLive ? 'ORBIT SIMULATION LIVE' : 'SIMULATION PAUSED', 40, 34);
+
+    // Scale & Zoom readout (Bottom-left)
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+    ctx.fillRect(14, h - 38, 220, 24);
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)';
+    ctx.strokeRect(14, h - 38, 220, 24);
+
+    ctx.font = '10px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText(`Scale: 1px = ${(1 / this.zoom).toFixed(1)} km | Zoom: ${this.zoom.toFixed(2)}x`, 22, h - 22);
+
+    ctx.restore();
+  }
+
+  destroy() {
+    if (this.animFrameId) {
+      cancelAnimationFrame(this.animFrameId);
+    }
+    window.removeEventListener('resize', this.handleResize);
+  }
+}
+
+
+// --- Charts Manager ---
+/**
+ * Interactive Aerospace Charts Manager
+ * Handles Chart.js instances for:
+ *   1. Orbital Radius vs. Orbital Speed (r vs v)
+ *   2. Orbital Radius vs. Time Period (r vs T)
+ * Includes dynamic markers for active user orbital radius, range switching, and scale toggling.
+ * Includes automatic retry and pure Canvas 2D fallback rendering to guarantee visual display under any conditions.
+ */
+
+class ChartsManager {
+  constructor(speedCanvasId, periodCanvasId) {
+    this.speedCanvas = document.getElementById(speedCanvasId);
+    this.periodCanvas = document.getElementById(periodCanvasId);
+    
+    this.speedChart = null;
+    this.periodChart = null;
+    this.retryCount = 0;
+    
+    // View state
+    this.currentBody = null;
+    this.currentAltitude = 420;
+    this.currentRange = 'meo'; // 'leo', 'meo', 'lunar'
+    this.scaleType = 'linear';  // 'linear' or 'logarithmic'
+    this.periodUnit = 'hours';  // 'hours' or 'minutes'
+    
+    this.initCharts();
+  }
+
+  getRangeBounds(body) {
+    const R = (body && body.radius) ? Number(body.radius) : 6371.0;
+    switch (this.currentRange) {
+      case 'leo':
+        return { min: R + 100, max: R + 2500, steps: 80 };
+      case 'lunar':
+        return { min: R + 100, max: Math.max(420000, R + 400000), steps: 120 };
+      case 'meo':
+      default:
+        return { min: R + 100, max: Math.max(50000, R + 45000), steps: 100 };
+    }
+  }
+
+  initCharts() {
+    if (!this.speedCanvas || !this.periodCanvas) {
+      this.speedCanvas = document.getElementById('chart-speed-canvas');
+      this.periodCanvas = document.getElementById('chart-period-canvas');
+    }
+
+    if (!window.Chart) {
+      if (this.retryCount < 40) {
+        this.retryCount++;
+        setTimeout(() => this.initCharts(), 100);
+      }
+      return;
+    }
+
+    try {
+      // Default global Chart.js dark aerospace theme styling
+      Chart.defaults.color = '#94a3b8';
+      Chart.defaults.font.family = '"JetBrains Mono", monospace';
+      Chart.defaults.borderColor = 'rgba(51, 65, 85, 0.4)';
+
+      if (!this.speedChart && this.speedCanvas) {
+        this.speedChart = this.createSpeedChart();
+      }
+      if (!this.periodChart && this.periodCanvas) {
+        this.periodChart = this.createPeriodChart();
+      }
+
+      if (this.currentBody) {
+        this.update(this.currentBody, this.currentAltitude);
+      }
+    } catch (e) {
+      console.warn('Chart.js init failed, falling back to Canvas 2D:', e);
+      if (this.currentBody) {
+        this.renderCanvasFallback(this.currentBody, this.currentAltitude);
+      }
+    }
+  }
+
+  createSpeedChart() {
+    const ctx = this.speedCanvas.getContext('2d');
+    
+    const gradient = ctx.createLinearGradient(0, 0, 0, 260);
+    gradient.addColorStop(0, 'rgba(0, 240, 255, 0.35)');
+    gradient.addColorStop(1, 'rgba(0, 240, 255, 0.01)');
+
+    return new Chart(ctx, {
+      type: 'line',
+      data: {
+        datasets: [
+          {
+            label: 'Orbital Speed (km/s)',
+            data: [],
+            borderColor: '#00f0ff',
+            backgroundColor: gradient,
+            borderWidth: 2.5,
+            fill: true,
+            pointRadius: 0,
+            pointHoverRadius: 6,
+            pointHoverBackgroundColor: '#00f0ff',
+            pointHoverBorderColor: '#ffffff',
+            tension: 0.25
+          },
+          {
+            label: 'Active Radius',
+            data: [],
+            borderColor: '#ffffff',
+            backgroundColor: '#00f0ff',
+            borderWidth: 2,
+            pointRadius: 7,
+            pointHoverRadius: 9,
+            pointBorderColor: '#ffffff',
+            pointBackgroundColor: '#00f0ff',
+            showLine: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 250 },
+        interaction: {
+          intersect: false,
+          mode: 'nearest'
+        },
+        plugins: {
+          legend: {
+            display: true,
+            labels: {
+              boxWidth: 12,
+              font: { size: 11 }
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+            titleColor: '#38bdf8',
+            bodyColor: '#f8fafc',
+            borderColor: 'rgba(56, 189, 248, 0.4)',
+            borderWidth: 1,
+            padding: 10,
+            callbacks: {
+              label: (context) => {
+                const r = Number(context.parsed.x).toLocaleString();
+                const spd = Number(context.parsed.y).toFixed(3);
+                return `Radius (r): ${r} km | Speed (v): ${spd} km/s (${(context.parsed.y * 3600).toLocaleString(undefined, { maximumFractionDigits: 0 })} km/h)`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            type: 'linear',
+            title: {
+              display: true,
+              text: 'Orbital Radius: r = R + h (km)',
+              color: '#94a3b8',
+              font: { size: 11 }
+            },
+            grid: { color: 'rgba(30, 41, 59, 0.5)' },
+            ticks: {
+              callback: (val) => Number(val).toLocaleString() + ' km'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Orbital Velocity: v (km/s)',
+              color: '#00f0ff',
+              font: { size: 11 }
+            },
+            grid: { color: 'rgba(30, 41, 59, 0.5)' },
+            ticks: {
+              callback: (val) => Number(val).toFixed(1) + ' km/s'
+            }
+          }
+        }
+      }
+    });
+  }
+
+  createPeriodChart() {
+    const ctx = this.periodCanvas.getContext('2d');
+    
+    const gradient = ctx.createLinearGradient(0, 0, 0, 260);
+    gradient.addColorStop(0, 'rgba(168, 85, 247, 0.35)');
+    gradient.addColorStop(1, 'rgba(168, 85, 247, 0.01)');
+
+    return new Chart(ctx, {
+      type: 'line',
+      data: {
+        datasets: [
+          {
+            label: 'Orbital Period (hours)',
+            data: [],
+            borderColor: '#a855f7',
+            backgroundColor: gradient,
+            borderWidth: 2.5,
+            fill: true,
+            pointRadius: 0,
+            pointHoverRadius: 6,
+            pointHoverBackgroundColor: '#a855f7',
+            pointHoverBorderColor: '#ffffff',
+            tension: 0.25
+          },
+          {
+            label: 'Active Radius',
+            data: [],
+            borderColor: '#ffffff',
+            backgroundColor: '#a855f7',
+            borderWidth: 2,
+            pointRadius: 7,
+            pointHoverRadius: 9,
+            pointBorderColor: '#ffffff',
+            pointBackgroundColor: '#a855f7',
+            showLine: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 250 },
+        interaction: {
+          intersect: false,
+          mode: 'nearest'
+        },
+        plugins: {
+          legend: {
+            display: true,
+            labels: {
+              boxWidth: 12,
+              font: { size: 11 }
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+            titleColor: '#c084fc',
+            bodyColor: '#f8fafc',
+            borderColor: 'rgba(168, 85, 247, 0.4)',
+            borderWidth: 1,
+            padding: 10,
+            callbacks: {
+              label: (context) => {
+                const r = Number(context.parsed.x).toLocaleString();
+                const hrs = context.parsed.y;
+                const formatted = hrs >= 24 
+                  ? `${(hrs / 24).toFixed(2)} days (${hrs.toFixed(1)} hrs)` 
+                  : `${hrs.toFixed(2)} hrs (${(hrs * 60).toFixed(0)} min)`;
+                return `Radius (r): ${r} km | Period (T): ${formatted}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            type: 'linear',
+            title: {
+              display: true,
+              text: 'Orbital Radius: r = R + h (km)',
+              color: '#94a3b8',
+              font: { size: 11 }
+            },
+            grid: { color: 'rgba(30, 41, 59, 0.5)' },
+            ticks: {
+              callback: (val) => Number(val).toLocaleString() + ' km'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Time Period: T (hours)',
+              color: '#a855f7',
+              font: { size: 11 }
+            },
+            grid: { color: 'rgba(30, 41, 59, 0.5)' },
+            ticks: {
+              callback: (val) => Number(val).toFixed(1) + ' h'
+            }
+          }
+        }
+      }
+    });
+  }
+
+  update(body, altitudeKm) {
+    this.currentBody = body;
+    this.currentAltitude = altitudeKm;
+
+    if (!this.speedChart || !this.periodChart) {
+      this.initCharts();
+      if (!this.speedChart || !this.periodChart) {
+        this.renderCanvasFallback(body, altitudeKm);
+        return;
+      }
+    }
+
+    try {
+      const bounds = this.getRangeBounds(body);
+      const isLog = this.scaleType === 'logarithmic';
+      
+      // Generate fresh curve points parameterized by Orbital Radius
+      const curvePoints = generateOrbitalCurves(body, bounds.min, bounds.max, bounds.steps, isLog);
+      
+      const speedCurveData = curvePoints.map(p => ({ x: p.radius, y: p.speed }));
+      const periodCurveData = curvePoints.map(p => ({ 
+        x: p.radius, 
+        y: this.periodUnit === 'minutes' ? p.periodMin : p.periodHours 
+      }));
+
+      // Current active point calculation based on Orbital Radius
+      const currentOrbit = calculateOrbit(altitudeKm, body);
+      const activeSpeedPoint = [{ x: currentOrbit.totalRadiusKm, y: currentOrbit.speedKms }];
+      const activePeriodPoint = [{ 
+        x: currentOrbit.totalRadiusKm, 
+        y: this.periodUnit === 'minutes' ? currentOrbit.periodMin : currentOrbit.periodHours 
+      }];
+
+      // Update Speed Chart (Radius vs. Speed)
+      this.speedChart.data.datasets[0].data = speedCurveData;
+      this.speedChart.data.datasets[1].data = activeSpeedPoint;
+      this.speedChart.options.scales.x.type = this.scaleType;
+      this.speedChart.update('none');
+
+      // Update Period Chart (Radius vs. Time Period)
+      this.periodChart.data.datasets[0].data = periodCurveData;
+      this.periodChart.data.datasets[1].data = activePeriodPoint;
+      this.periodChart.data.datasets[0].label = `Orbital Period (${this.periodUnit})`;
+      this.periodChart.options.scales.y.title.text = `Time Period: T (${this.periodUnit})`;
+      this.periodChart.options.scales.x.type = this.scaleType;
+      this.periodChart.update('none');
+    } catch (err) {
+      console.warn('Chart.js update failed, falling back to 2D Canvas:', err);
+      this.renderCanvasFallback(body, altitudeKm);
+    }
+  }
+
+  renderCanvasFallback(body, altitudeKm) {
+    if (this.speedCanvas) {
+      this.drawDirectCurve(this.speedCanvas, body, altitudeKm, 'speed');
+    }
+    if (this.periodCanvas) {
+      this.drawDirectCurve(this.periodCanvas, body, altitudeKm, 'period');
+    }
+  }
+
+  drawDirectCurve(canvas, body, altitudeKm, type) {
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.parentElement.clientWidth || 360;
+    const h = 260;
+
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = `${w}px`;
+    canvas.style.height = `${h}px`;
+    ctx.scale(dpr, dpr);
+
+    ctx.fillStyle = '#060913';
+    ctx.fillRect(0, 0, w, h);
+
+    const padLeft = 55;
+    const padRight = 20;
+    const padTop = 30;
+    const padBottom = 40;
+    const plotW = w - padLeft - padRight;
+    const plotH = h - padTop - padBottom;
+
+    const bounds = this.getRangeBounds(body);
+    const orbit = calculateOrbit(altitudeKm, body);
+
+    // Compute curve points
+    const points = generateOrbitalCurves(body, bounds.min, bounds.max, 80, false);
+    let maxY = 0;
+    for (const p of points) {
+      const val = type === 'speed' ? p.speed : (this.periodUnit === 'minutes' ? p.periodMin : p.periodHours);
+      if (val > maxY) maxY = val;
+    }
+    maxY = maxY * 1.1;
+
+    // Draw grid lines
+    ctx.strokeStyle = 'rgba(51, 65, 85, 0.35)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 4; i++) {
+      const y = padTop + (plotH / 4) * i;
+      ctx.beginPath();
+      ctx.moveTo(padLeft, y);
+      ctx.lineTo(padLeft + plotW, y);
+      ctx.stroke();
+
+      const yVal = (maxY * (1 - i / 4)).toFixed(1);
+      ctx.font = '10px monospace';
+      ctx.fillStyle = '#64748b';
+      ctx.textAlign = 'right';
+      ctx.fillText(yVal, padLeft - 6, y + 3);
+    }
+
+    // Draw curve
+    ctx.beginPath();
+    points.forEach((p, idx) => {
+      const x = padLeft + ((p.radius - bounds.min) / (bounds.max - bounds.min)) * plotW;
+      const val = type === 'speed' ? p.speed : (this.periodUnit === 'minutes' ? p.periodMin : p.periodHours);
+      const y = padTop + plotH - (val / maxY) * plotH;
+      if (idx === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+
+    ctx.strokeStyle = type === 'speed' ? '#00f0ff' : '#a855f7';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Active marker
+    const activeVal = type === 'speed' ? orbit.speedKms : (this.periodUnit === 'minutes' ? orbit.periodMin : orbit.periodHours);
+    const curX = padLeft + ((orbit.totalRadiusKm - bounds.min) / (bounds.max - bounds.min)) * plotW;
+    const curY = padTop + plotH - (activeVal / maxY) * plotH;
+
+    if (curX >= padLeft && curX <= padLeft + plotW) {
+      ctx.beginPath();
+      ctx.arc(curX, curY, 6, 0, Math.PI * 2);
+      ctx.fillStyle = type === 'speed' ? '#00f0ff' : '#a855f7';
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    // Axis labels
+    ctx.font = '11px monospace';
+    ctx.fillStyle = '#94a3b8';
+    ctx.textAlign = 'center';
+    ctx.fillText('Orbital Radius: r (km)', padLeft + plotW / 2, h - 10);
+  }
+
+  setRange(rangeKey) {
+    this.currentRange = rangeKey;
+    if (this.currentBody) {
+      this.update(this.currentBody, this.currentAltitude);
+    }
+  }
+
+  setScaleType(scaleType) {
+    this.scaleType = scaleType;
+    if (this.currentBody) {
+      this.update(this.currentBody, this.currentAltitude);
+    }
+  }
+
+  setPeriodUnit(unit) {
+    this.periodUnit = unit;
+    if (this.currentBody) {
+      this.update(this.currentBody, this.currentAltitude);
+    }
+  }
+
+  resize() {
+    if (this.speedChart) this.speedChart.resize();
+    if (this.periodChart) this.periodChart.resize();
+  }
+}
+
+
+// --- App Controller ---
+/**
+ * Satellite Orbit Speed and Period Calculator
+ * Focused, high-performance controller for:
+ *   1. Calculator Inputs (Altitude h, Radius r, Time Period T)
+ *   2. Results Section (Speed in km/s, Time Period in min/hrs, Radius in km)
+ *   3. 2D Orbit Simulator (Earth + Satellite circular motion)
+ *   4. Keplerian Graphs (r vs. v & r vs. T)
+ */
+
+class OrbitCalculatorApp {
+  constructor() {
+    // Standard Earth constant body
+    this.currentBody = { ...CELESTIAL_BODIES.earth };
+    this.altitudeKm = 420; // Default: ISS altitude
+    this.targetPeriodUnit = 'min'; // 'min' or 'hrs'
+
+    // Min and Max altitude supported
+    this.minAltKm = 50;
+    this.maxAltKm = 400000;
+
+    // Component instances
+    this.visualizer = null;
+    this.charts = null;
+
+    // Initialize application
+    this.cacheDOM();
+    this.initVisualizer();
+    this.initCharts();
+    this.bindEvents();
+    this.updateAll();
+  }
+
+  cacheDOM() {
+    // 1. Altitude Inputs
+    this.altitudeInput = document.getElementById('altitude-input');
+    this.altitudeSlider = document.getElementById('altitude-slider');
+    this.btnSub100 = document.getElementById('step-sub-100');
+    this.btnAdd100 = document.getElementById('step-add-100');
+    this.btnSub1000 = document.getElementById('step-sub-1000');
+    this.btnAdd1000 = document.getElementById('step-add-1000');
+
+    // 2. Orbital Radius Inputs
+    this.radiusInput = document.getElementById('radius-input');
+    this.radiusSlider = document.getElementById('radius-slider');
+    this.btnRadiusSub1000 = document.getElementById('radius-sub-1000');
+    this.btnRadiusSub100 = document.getElementById('radius-sub-100');
+    this.btnRadiusAdd100 = document.getElementById('radius-add-100');
+    this.btnRadiusAdd1000 = document.getElementById('radius-add-1000');
+
+    // 3. Time Period Calculator Inputs
+    this.periodInput = document.getElementById('period-input');
+    this.periodUnitMin = document.getElementById('period-unit-min');
+    this.periodUnitHrs = document.getElementById('period-unit-hrs');
+    this.periodInputAddon = document.getElementById('period-input-addon');
+    this.btnPeriodSub30 = document.getElementById('period-sub-30');
+    this.btnPeriodSub10 = document.getElementById('period-sub-10');
+    this.btnPeriodAdd10 = document.getElementById('period-add-10');
+    this.btnPeriodAdd30 = document.getElementById('period-add-30');
+
+    // Action button & feedback
+    this.btnCalculate = document.getElementById('btn-calculate');
+    this.calcTimestamp = document.getElementById('calc-timestamp');
+    this.atmoWarningBadge = document.getElementById('atmo-warning-badge');
+
+    // Results Display Cards
+    this.valSpeedKms = document.getElementById('res-speed-kms');
+    this.valSpeedSecondary = document.getElementById('res-speed-secondary');
+    this.valPeriodPrimary = document.getElementById('res-period-primary');
+    this.valPeriodSecondary = document.getElementById('res-period-secondary');
+    this.valOrbitalRadius = document.getElementById('res-orbital-radius');
+    this.valRadiusBreakdown = document.getElementById('res-radius-breakdown');
+
+    // Visual Orbit Simulator
+    this.simCanvas = document.getElementById('orbit-sim-canvas');
+    this.btnSimPlayPause = document.getElementById('sim-play-pause');
+    this.btnSimFit = document.getElementById('sim-fit-btn');
+    this.btnSimResetPan = document.getElementById('sim-reset-pan');
+    this.simSpeedSelect = document.getElementById('sim-speed-select');
+
+    // Graphs
+    this.chartRangeGroup = document.getElementById('chart-range-group');
+  }
+
+  initVisualizer() {
+    if (this.simCanvas) {
+      this.visualizer = new OrbitVisualizer(this.simCanvas, {
+        body: this.currentBody
+      });
+      this.visualizer.updateState(this.altitudeKm, this.currentBody);
+    }
+  }
+
+  initCharts() {
+    this.charts = new ChartsManager('chart-speed-canvas', 'chart-period-canvas');
+  }
+
+  // Smooth Logarithmic Slider Transformation (50 km to 400,000 km)
+  altToSlider(alt) {
+    const minL = Math.log10(this.minAltKm);
+    const maxL = Math.log10(this.maxAltKm);
+    const clamped = Math.max(this.minAltKm, Math.min(this.maxAltKm, alt));
+    return Math.round(((Math.log10(clamped) - minL) / (maxL - minL)) * 1000);
+  }
+
+  sliderToAlt(sliderVal) {
+    const minL = Math.log10(this.minAltKm);
+    const maxL = Math.log10(this.maxAltKm);
+    const alt = Math.pow(10, minL + (sliderVal / 1000) * (maxL - minL));
+    if (alt < 1000) return Math.round(alt * 10) / 10;
+    if (alt < 10000) return Math.round(alt);
+    return Math.round(alt / 10) * 10;
+  }
+
+  setAltitude(newAltKm, source = 'manual') {
+    const clamped = Math.max(0.1, Math.min(1000000, Number(newAltKm) || 0.1));
+    this.altitudeKm = clamped;
+    const bodyR = this.currentBody.radius;
+    const totalRadiusKm = bodyR + clamped;
+
+    // 1. Sync Altitude input & slider
+    if (source !== 'altitude-input' && this.altitudeInput) {
+      this.altitudeInput.value = clamped.toFixed(1);
+    }
+    if (source !== 'altitude-slider' && this.altitudeSlider) {
+      this.altitudeSlider.value = this.altToSlider(clamped);
+    }
+
+    // 2. Sync Orbital Radius input & slider
+    if (source !== 'radius-input' && this.radiusInput) {
+      this.radiusInput.value = totalRadiusKm.toFixed(1);
+    }
+    if (source !== 'radius-slider' && this.radiusSlider) {
+      this.radiusSlider.value = this.altToSlider(clamped);
+    }
+
+    // 3. Sync Time Period input (when user is editing altitude or radius)
+    if (source !== 'period-input' && this.periodInput && document.activeElement !== this.periodInput) {
+      const orbit = calculateOrbit(clamped, this.currentBody);
+      this.periodInput.value = this.targetPeriodUnit === 'hrs' 
+        ? orbit.periodHours.toFixed(2) 
+        : orbit.periodMin.toFixed(2);
+    }
+
+    this.updateAll();
+  }
+
+  setRadius(newRadiusKm, source = 'manual') {
+    const bodyR = this.currentBody.radius;
+    const clampedRadius = Math.max(bodyR + 0.1, Number(newRadiusKm) || (bodyR + 0.1));
+    this.setAltitude(clampedRadius - bodyR, source);
+  }
+
+  setPeriod(periodVal, source = 'manual') {
+    const val = Number(periodVal) || 1;
+    const totalSec = this.targetPeriodUnit === 'hrs' ? val * 3600 : val * 60;
+    const calculatedOrbit = calculateOrbitFromPeriod(totalSec, this.currentBody);
+    this.setAltitude(calculatedOrbit.altitudeKm, source);
+  }
+
+  updateAll() {
+    const orbit = calculateOrbit(this.altitudeKm, this.currentBody);
+    this.renderResults(orbit);
+
+    if (this.visualizer) {
+      this.visualizer.updateState(this.altitudeKm, this.currentBody);
+    }
+
+    if (this.charts) {
+      this.charts.update(this.currentBody, this.altitudeKm);
+    }
+  }
+
+  renderResults(orbit) {
+    // 1. Orbital Speed (km/s)
+    if (this.valSpeedKms) {
+      this.valSpeedKms.textContent = `${orbit.speedKms.toFixed(3)} km/s`;
+    }
+    if (this.valSpeedSecondary) {
+      this.valSpeedSecondary.textContent = `${orbit.speedKmh.toLocaleString(undefined, { maximumFractionDigits: 0 })} km/h • Mach ${orbit.mach.toFixed(1)}`;
+    }
+
+    // 2. Time Period (minutes / hours)
+    if (this.valPeriodPrimary) {
+      this.valPeriodPrimary.textContent = `${orbit.periodMin.toFixed(2)} min (${orbit.periodHours.toFixed(2)} hrs)`;
+    }
+    if (this.valPeriodSecondary) {
+      this.valPeriodSecondary.textContent = `${orbit.periodFormatted} • ${orbit.periodSec.toLocaleString(undefined, { maximumFractionDigits: 0 })} seconds`;
+    }
+
+    // 3. Orbital Radius (km)
+    if (this.valOrbitalRadius) {
+      this.valOrbitalRadius.textContent = `${orbit.totalRadiusKm.toLocaleString(undefined, { maximumFractionDigits: 1 })} km`;
+    }
+    if (this.valRadiusBreakdown) {
+      this.valRadiusBreakdown.textContent = `R = 6,371 + h = ${orbit.altitudeKm.toLocaleString(undefined, { maximumFractionDigits: 1 })} km`;
+    }
+
+    // Atmospheric Drag Warning (< 100 km)
+    if (this.atmoWarningBadge) {
+      if (orbit.isAtmosphericDrag) {
+        this.atmoWarningBadge.classList.remove('hidden');
+        this.atmoWarningBadge.innerHTML = `
+          <div class="px-3 py-1.5 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs font-mono animate-pulse">
+            ⚠️ Below Kármán Line (&lt; 100 km): Severe Atmospheric Drag Region
+          </div>
+        `;
+      } else {
+        this.atmoWarningBadge.classList.add('hidden');
+      }
+    }
+  }
+
+  bindEvents() {
+    // Altitude Input & Slider
+    if (this.altitudeInput) {
+      this.altitudeInput.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        if (isNaN(val)) return;
+        this.setAltitude(val, 'altitude-input');
+      });
+    }
+
+    if (this.altitudeSlider) {
+      this.altitudeSlider.addEventListener('input', (e) => {
+        const altKm = this.sliderToAlt(Number(e.target.value));
+        this.setAltitude(altKm, 'altitude-slider');
+      });
+    }
+
+    // Altitude Steppers
+    if (this.btnSub100) this.btnSub100.addEventListener('click', () => this.setAltitude(this.altitudeKm - 100, 'step'));
+    if (this.btnAdd100) this.btnAdd100.addEventListener('click', () => this.setAltitude(this.altitudeKm + 100, 'step'));
+    if (this.btnSub1000) this.btnSub1000.addEventListener('click', () => this.setAltitude(this.altitudeKm - 1000, 'step'));
+    if (this.btnAdd1000) this.btnAdd1000.addEventListener('click', () => this.setAltitude(this.altitudeKm + 1000, 'step'));
+
+    // Orbital Radius Input & Slider
+    if (this.radiusInput) {
+      this.radiusInput.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        if (isNaN(val)) return;
+        this.setRadius(val, 'radius-input');
+      });
+    }
+
+    if (this.radiusSlider) {
+      this.radiusSlider.addEventListener('input', (e) => {
+        const altKm = this.sliderToAlt(Number(e.target.value));
+        this.setRadius(this.currentBody.radius + altKm, 'radius-slider');
+      });
+    }
+
+    // Radius Steppers
+    if (this.btnRadiusSub1000) this.btnRadiusSub1000.addEventListener('click', () => this.setRadius(this.currentBody.radius + this.altitudeKm - 1000, 'step'));
+    if (this.btnRadiusSub100) this.btnRadiusSub100.addEventListener('click', () => this.setRadius(this.currentBody.radius + this.altitudeKm - 100, 'step'));
+    if (this.btnRadiusAdd100) this.btnRadiusAdd100.addEventListener('click', () => this.setRadius(this.currentBody.radius + this.altitudeKm + 100, 'step'));
+    if (this.btnRadiusAdd1000) this.btnRadiusAdd1000.addEventListener('click', () => this.setRadius(this.currentBody.radius + this.altitudeKm + 1000, 'step'));
+
+    // Time Period Calculator Input
+    if (this.periodInput) {
+      this.periodInput.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        if (isNaN(val) || val <= 0) return;
+        this.setPeriod(val, 'period-input');
+      });
+    }
+
+    // Period Unit Toggle (min / hrs)
+    if (this.periodUnitMin && this.periodUnitHrs) {
+      this.periodUnitMin.addEventListener('click', () => {
+        if (this.targetPeriodUnit === 'min') return;
+        this.targetPeriodUnit = 'min';
+        this.periodUnitMin.classList.add('bg-amber-500', 'text-slate-950', 'font-bold');
+        this.periodUnitMin.classList.remove('text-slate-400');
+        this.periodUnitHrs.classList.remove('bg-amber-500', 'text-slate-950', 'font-bold');
+        this.periodUnitHrs.classList.add('text-slate-400');
+        if (this.periodInputAddon) this.periodInputAddon.textContent = 'minutes';
+        
+        const orbit = calculateOrbit(this.altitudeKm, this.currentBody);
+        this.periodInput.value = orbit.periodMin.toFixed(2);
+      });
+
+      this.periodUnitHrs.addEventListener('click', () => {
+        if (this.targetPeriodUnit === 'hrs') return;
+        this.targetPeriodUnit = 'hrs';
+        this.periodUnitHrs.classList.add('bg-amber-500', 'text-slate-950', 'font-bold');
+        this.periodUnitHrs.classList.remove('text-slate-400');
+        this.periodUnitMin.classList.remove('bg-amber-500', 'text-slate-950', 'font-bold');
+        this.periodUnitMin.classList.add('text-slate-400');
+        if (this.periodInputAddon) this.periodInputAddon.textContent = 'hours';
+        
+        const orbit = calculateOrbit(this.altitudeKm, this.currentBody);
+        this.periodInput.value = orbit.periodHours.toFixed(2);
+      });
+    }
+
+    // Period Steppers
+    if (this.btnPeriodSub30) {
+      this.btnPeriodSub30.addEventListener('click', () => {
+        const orbit = calculateOrbit(this.altitudeKm, this.currentBody);
+        const step = this.targetPeriodUnit === 'hrs' ? 0.5 : 30;
+        const currentVal = this.targetPeriodUnit === 'hrs' ? orbit.periodHours : orbit.periodMin;
+        this.setPeriod(Math.max(0.1, currentVal - step), 'step');
+      });
+    }
+    if (this.btnPeriodSub10) {
+      this.btnPeriodSub10.addEventListener('click', () => {
+        const orbit = calculateOrbit(this.altitudeKm, this.currentBody);
+        const step = this.targetPeriodUnit === 'hrs' ? 0.1667 : 10;
+        const currentVal = this.targetPeriodUnit === 'hrs' ? orbit.periodHours : orbit.periodMin;
+        this.setPeriod(Math.max(0.1, currentVal - step), 'step');
+      });
+    }
+    if (this.btnPeriodAdd10) {
+      this.btnPeriodAdd10.addEventListener('click', () => {
+        const orbit = calculateOrbit(this.altitudeKm, this.currentBody);
+        const step = this.targetPeriodUnit === 'hrs' ? 0.1667 : 10;
+        const currentVal = this.targetPeriodUnit === 'hrs' ? orbit.periodHours : orbit.periodMin;
+        this.setPeriod(currentVal + step, 'step');
+      });
+    }
+    if (this.btnPeriodAdd30) {
+      this.btnPeriodAdd30.addEventListener('click', () => {
+        const orbit = calculateOrbit(this.altitudeKm, this.currentBody);
+        const step = this.targetPeriodUnit === 'hrs' ? 0.5 : 30;
+        const currentVal = this.targetPeriodUnit === 'hrs' ? orbit.periodHours : orbit.periodMin;
+        this.setPeriod(currentVal + step, 'step');
+      });
+    }
+
+    // Calculate Button (Primary CTA)
+    if (this.btnCalculate) {
+      this.btnCalculate.addEventListener('click', () => {
+        if (this.calcTimestamp) {
+          this.calcTimestamp.textContent = `Calculated at ${new Date().toLocaleTimeString()}`;
+        }
+        this.updateAll();
+        if (this.visualizer) this.visualizer.autoFit();
+      });
+    }
+
+    // 2D Simulator Controls
+    if (this.btnSimPlayPause) {
+      this.btnSimPlayPause.addEventListener('click', () => {
+        if (!this.visualizer) return;
+        const paused = this.visualizer.togglePause();
+        this.btnSimPlayPause.innerHTML = paused 
+          ? '<i data-lucide="play" class="w-3.5 h-3.5 mr-1 text-cyan-400"></i> Resume' 
+          : '<i data-lucide="pause" class="w-3.5 h-3.5 mr-1 text-cyan-400"></i> Pause';
+        if (window.lucide) lucide.createIcons();
+      });
+    }
+
+    if (this.btnSimFit) {
+      this.btnSimFit.addEventListener('click', () => {
+        if (this.visualizer) this.visualizer.autoFit();
+      });
+    }
+
+    if (this.btnSimResetPan) {
+      this.btnSimResetPan.addEventListener('click', () => {
+        if (this.visualizer) this.visualizer.resetPan();
+      });
+    }
+
+    if (this.simSpeedSelect) {
+      this.simSpeedSelect.addEventListener('change', (e) => {
+        if (this.visualizer) this.visualizer.setSimSpeed(Number(e.target.value));
+      });
+    }
+
+    // Chart Range Selector
+    if (this.chartRangeGroup) {
+      const rangeButtons = this.chartRangeGroup.querySelectorAll('button');
+      rangeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          rangeButtons.forEach(b => {
+            b.classList.remove('bg-cyan-500', 'text-slate-950', 'font-bold');
+            b.classList.add('text-slate-400');
+          });
+          btn.classList.add('bg-cyan-500', 'text-slate-950', 'font-bold');
+          btn.classList.remove('text-slate-400');
+          if (this.charts) this.charts.setRange(btn.dataset.range);
+        });
+      });
+    }
+
+    // Keyboard Space to pause
+    window.addEventListener('keydown', (e) => {
+      if (document.activeElement.tagName === 'INPUT') return;
+      if (e.key === ' ') {
+        e.preventDefault();
+        if (this.btnSimPlayPause) this.btnSimPlayPause.click();
+      }
+    });
+  }
+}
+
+// Bootstrap
+document.addEventListener('DOMContentLoaded', () => {
+  window.app = new OrbitCalculatorApp();
+  if (window.lucide) {
+    lucide.createIcons();
+  }
+});
+
+</script>
 
 </body>
 </html>

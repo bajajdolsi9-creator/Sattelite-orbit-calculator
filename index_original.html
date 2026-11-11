@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Satellite Orbit Speed & Period Calculator</title>
+  
+  <!-- SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300f0ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='3'/><path d='M4.93 4.93 19.07 19.07'/><circle cx='12' cy='12' r='9'/></svg>">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            space: {
+              950: '#060913',
+              900: '#0b0f19',
+              850: '#0f172a',
+              800: '#1e293b'
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Chart.js Engine (Local + CDN Fallback) -->
+  <script src="js/chart.min.js"></script>
+  <script>
+    if (!window.Chart) {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"><\/script>');
+    }
+  </script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="min-h-screen bg-space-950 text-slate-100 flex flex-col antialiased selection:bg-cyan-500 selection:text-black">
+
+  <!-- Minimal Header -->
+  <header class="border-b border-slate-800/80 bg-space-900/90 backdrop-blur-md sticky top-0 z-40 px-4 lg:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 p-[1.5px] shadow-[0_0_15px_rgba(0,240,255,0.3)]">
+          <div class="w-full h-full bg-space-950 rounded-[10px] flex items-center justify-center">
+            <i data-lucide="orbit" class="w-5 h-5 text-cyan-400"></i>
+          </div>
+        </div>
+        <div>
+          <h1 class="text-base lg:text-lg font-heading font-bold tracking-tight text-white flex items-center gap-1.5">
+            SATELLITE ORBIT <span class="text-cyan-400">SPEED &amp; PERIOD CALCULATOR</span>
+          </h1>
+          <p class="text-xs text-slate-400">Earth Circular Orbital Mechanics &bull; R = 6,371 km &bull; M = 5.972 × 10²⁴ kg</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-2 bg-slate-900/90 border border-slate-800 px-3 py-1 rounded-full text-xs font-mono">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-slate-300">SOLVER:</span>
+        <span class="text-emerald-400 font-semibold">ACTIVE</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid -->
+  <main class="max-w-7xl mx-auto w-full px-4 lg:px-8 py-6 flex-1">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- ================= LEFT COLUMN: THE CALCULATOR ================= -->
+      <div class="lg:col-span-5 space-y-5">
+
+        <!-- Calculator Input Panel -->
+        <div class="glass-panel rounded-2xl p-5 border border-cyan-500/20 shadow-xl space-y-4">
+          
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="calculator" class="w-4 h-4 text-cyan-400"></i>
+              <h2 class="text-sm font-heading font-bold text-white uppercase tracking-wider">Orbit Calculator Inputs</h2>
+            </div>
+            <span class="text-[11px] font-mono text-cyan-400">Circular Earth Orbit</span>
+          </div>
+
+          <!-- 1. SATELLITE ALTITUDE INPUT (h) -->
+          <div class="space-y-2 bg-slate-900/60 p-3.5 rounded-xl border border-slate-800">
+            <div class="flex items-center justify-between">
+              <label for="altitude-input" class="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-cyan-400"></i>
+                1. Satellite Altitude (h)
+              </label>
+              <span class="text-[10px] font-mono text-slate-400">above Earth surface</span>
+            </div>
+
+            <div class="relative">
+              <input id="altitude-input" type="number" min="1" max="400000" step="any" value="420" class="w-full bg-slate-950 border border-slate-700/80 rounded-lg px-3.5 py-2 text-base font-mono font-bold text-cyan-300 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors">
+              <span class="absolute right-3 top-2.5 text-xs text-slate-400 font-mono">km</span>
+            </div>
+
+            <!-- Steppers -->
+            <div class="grid grid-cols-4 gap-1.5 pt-0.5">
+              <button id="step-sub-1000" type="button" class="px-2 py-1 bg-slate-800/80 hover:bg-slate-700 text-slate-300 rounded text-[11px] font-mono border border-slate-700/60 transition-all">-1,000</button>
+              <button id="step-sub-100" type="button" class="px-2 py-1 bg-slate-800/80 hover:bg-slate-700 text-slate-300 rounded text-[11px] font-mono border border-slate-700/60 transition-all">-100</button>
+              <button id="step-add-100" type="button" class="px-2 py-1 bg-slate-800/80 hover:bg-slate-700 text-slate-300 rounded text-[11px] font-mono border border-slate-700/60 transition-all">+100</button>
+              <button id="step-add-1000" type="button" class="px-2 py-1 bg-slate-800/80 hover:bg-slate-700 text-slate-300 rounded text-[11px] font-mono border border-slate-700/60 transition-all">+1,000</button>
+            </div>
+
+            <!-- Slider -->
+            <div class="space-y-1 pt-1">
+              <input id="altitude-slider" type="range" min="0" max="1000" value="230" class="aerospace-slider">
+              <div class="flex justify-between text-[10px] font-mono text-slate-400">
+                <span>100 km</span>
+                <span>420 (ISS)</span>
+                <span>20k (GPS)</span>
+                <span>36k (GEO)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Formula Relation Divider -->
+          <div class="relative flex py-0.5 items-center">
+            <div class="flex-grow border-t border-slate-800"></div>
+            <span class="flex-shrink mx-3 text-[10px] font-mono text-cyan-400/90 bg-slate-950 px-2.5 py-0.5 rounded border border-cyan-500/20">
+              r = 6,371 km + h
+            </span>
+            <div class="flex-grow border-t border-slate-800"></div>
+          </div>
+
+          <!-- 2. ORBITAL RADIUS SELECTOR (r) -->
+          <div class="space-y-2 bg-slate-900/60 p-3.5 rounded-xl border border-slate-800">
+            <div class="flex items-center justify-between">
+              <label for="radius-input" class="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+                <i data-lucide="disc" class="w-3.5 h-3.5 text-purple-400"></i>
+                2. Orbital Radius Selector (r)
+              </label>
+              <span class="text-[10px] font-mono text-purple-300">from Earth center</span>
+            </div>
+
+            <div class="relative">
+              <input id="radius-input" type="number" min="6372" max="500000" step="any" value="6791" class="w-full bg-slate-950 border border-slate-700/80 rounded-lg px-3.5 py-2 text-base font-mono font-bold text-purple-300 focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 transition-colors">
+              <span class="absolute right-3 top-2.5 text-xs text-slate-400 font-mono">km</span>
+            </div>
+
+            <!-- Steppers -->
+            <div class="grid grid-cols-4 gap-1.5 pt-0.5">
+              <button id="radius-sub-1000" type="button" class="px-2 py-1 bg-slate-800/80 hover:bg-slate-700 text-slate-300 rounded text-[11px] font-mono border border-slate-700/60 transition-all">-1,000</button>
+              <button id="radius-sub-100" type="button" class="px-2 py-1 bg-slate-800/80 hover:bg-slate-700 text-slate-300 rounded text-[11px] font-mono border border-slate-700/60 transition-all">-100</button>
+              <button id="radius-add-100" type="button" class="px-2 py-1 bg-slate-800/80 hover:bg-slate-700 text-slate-300 rounded text-[11px] font-mono border border-slate-700/60 transition-all">+100</button>
+              <button id="radius-add-1000" type="button" class="px-2 py-1 bg-slate-800/80 hover:bg-slate-700 text-slate-300 rounded text-[11px] font-mono border border-slate-700/60 transition-all">+1,000</button>
+            </div>
+
+            <!-- Slider -->
+            <div class="space-y-1 pt-1">
+              <input id="radius-slider" type="range" min="0" max="1000" value="230" class="aerospace-slider">
+              <div class="flex justify-between text-[10px] font-mono text-slate-400">
+                <span>6,471 km</span>
+                <span>6,791 (ISS)</span>
+                <span>26,571 (GPS)</span>
+                <span>42,157 (GEO)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. TIME PERIOD CALCULATOR (T) -->
+          <div class="space-y-2 bg-slate-900/60 p-3.5 rounded-xl border border-slate-800">
+            <div class="flex items-center justify-between">
+              <label for="period-input" class="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i>
+                3. Time Period Calculator (T)
+              </label>
+
+              <!-- Unit toggle (min / hrs) -->
+              <div class="flex items-center bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-[11px] font-mono">
+                <button id="period-unit-min" type="button" class="px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold transition-all">min</button>
+                <button id="period-unit-hrs" type="button" class="px-2 py-0.5 rounded text-slate-400 hover:text-white transition-all">hrs</button>
+              </div>
+            </div>
+
+            <div class="relative">
+              <input id="period-input" type="number" min="1" max="100000" step="any" value="92.8" class="w-full bg-slate-950 border border-slate-700/80 rounded-lg px-3.5 py-2 text-base font-mono font-bold text-amber-300 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-colors">
+              <span id="period-input-addon" class="absolute right-3 top-2.5 text-xs text-slate-400 font-mono">minutes</span>
+            </div>
+
+            <!-- Steppers -->
+            <div class="grid grid-cols-4 gap-1.5 pt-0.5">
+              <button id="period-sub-30" type="button" class="px-2 py-1 bg-slate-800/80 hover:bg-slate-700 text-slate-300 rounded text-[11px] font-mono border border-slate-700/60 transition-all">-30m</button>
+              <button id="period-sub-10" type="button" class="px-2 py-1 bg-slate-800/80 hover:bg-slate-700 text-slate-300 rounded text-[11px] font-mono border border-slate-700/60 transition-all">-10m</button>
+              <button id="period-add-10" type="button" class="px-2 py-1 bg-slate-800/80 hover:bg-slate-700 text-slate-300 rounded text-[11px] font-mono border border-slate-700/60 transition-all">+10m</button>
+              <button id="period-add-30" type="button" class="px-2 py-1 bg-slate-800/80 hover:bg-slate-700 text-slate-300 rounded text-[11px] font-mono border border-slate-700/60 transition-all">+30m</button>
+            </div>
+          </div>
+
+          <!-- Atmospheric Drag Warning Flag -->
+          <div id="atmo-warning-badge" class="hidden"></div>
+
+          <!-- PROMINENT CALCULATE BUTTON -->
+          <button id="btn-calculate" type="button" class="w-full py-3.5 px-4 rounded-xl font-heading font-bold uppercase tracking-wider text-sm bg-gradient-to-r from-cyan-400 via-sky-500 to-purple-500 hover:from-cyan-300 hover:to-purple-400 text-slate-950 shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:shadow-[0_0_30px_rgba(0,240,255,0.7)] transition-all flex items-center justify-center gap-2 transform active:scale-[0.98]">
+            <i data-lucide="calculator" class="w-4 h-4"></i>
+            <span>Calculate Speed &amp; Period</span>
+          </button>
+          
+          <div class="flex items-center justify-between text-[11px] font-mono text-slate-400 pt-0.5 px-1">
+            <span class="flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              Keplerian Solver Ready
+            </span>
+            <span id="calc-timestamp" class="text-cyan-400/80">Auto-synced</span>
+          </div>
+
+        </div>
+
+        <!-- 4. RESULTS SECTION -->
+        <div class="glass-panel rounded-2xl p-5 border border-cyan-500/20 shadow-xl space-y-3.5">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <div class="flex items-center space-x-2">
+              <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+              <h2 class="text-xs font-heading font-bold text-white uppercase tracking-wider">Results Section</h2>
+            </div>
+            <span class="text-[10px] font-mono text-cyan-400">Computed Output</span>
+          </div>
+
+          <!-- Result 1: Orbital Speed -->
+          <div class="p-3.5 rounded-xl bg-slate-900/80 border border-emerald-500/30 flex items-center justify-between">
+            <div>
+              <div class="text-[11px] font-mono text-emerald-400 uppercase tracking-wider">Orbital Speed (km/s)</div>
+              <div id="res-speed-kms" class="text-2xl font-bold font-mono text-emerald-300 text-glow-emerald">7.660 km/s</div>
+              <div id="res-speed-secondary" class="text-[11px] font-mono text-slate-400">27,576 km/h &bull; Mach 22.3</div>
+            </div>
+            <i data-lucide="gauge" class="w-7 h-7 text-emerald-400/60"></i>
+          </div>
+
+          <!-- Result 2: Time Period -->
+          <div class="p-3.5 rounded-xl bg-slate-900/80 border border-purple-500/30 flex items-center justify-between">
+            <div>
+              <div class="text-[11px] font-mono text-purple-400 uppercase tracking-wider">Time Period (minutes / hours)</div>
+              <div id="res-period-primary" class="text-2xl font-bold font-mono text-purple-300 text-glow-violet">92.80 min (1.55 hrs)</div>
+              <div id="res-period-secondary" class="text-[11px] font-mono text-slate-400">1h 32m 48s &bull; 5,568 seconds</div>
+            </div>
+            <i data-lucide="clock" class="w-7 h-7 text-purple-400/60"></i>
+          </div>
+
+          <!-- Result 3: Orbital Radius -->
+          <div class="p-3.5 rounded-xl bg-slate-900/80 border border-cyan-500/30 flex items-center justify-between">
+            <div>
+              <div class="text-[11px] font-mono text-cyan-400 uppercase tracking-wider">Orbital Radius (km)</div>
+              <div id="res-orbital-radius" class="text-2xl font-bold font-mono text-white text-glow-cyan">6,791.0 km</div>
+              <div id="res-radius-breakdown" class="text-[11px] font-mono text-slate-400">R = 6,371 + h = 420 km</div>
+            </div>
+            <i data-lucide="disc" class="w-7 h-7 text-cyan-400/60"></i>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= RIGHT COLUMN: VISUAL SIMULATOR & GRAPHS ================= -->
+      <div class="lg:col-span-7 space-y-6">
+
+        <!-- 1. VISUAL REPRESENTATION: HOW SATELLITE MOVES AROUND EARTH -->
+        <div class="glass-panel rounded-2xl border border-cyan-500/20 overflow-hidden shadow-2xl relative">
+          
+          <!-- Simulation Header Toolbar -->
+          <div class="bg-space-900/90 border-b border-slate-800/80 px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 z-10 relative">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="satellite" class="w-4 h-4 text-cyan-400"></i>
+              <span class="text-xs font-heading font-bold text-white uppercase tracking-wider">Satellite Motion Around Earth</span>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex items-center space-x-2">
+              <div class="flex items-center space-x-1 text-xs font-mono">
+                <span class="text-slate-400 text-[11px]">Speed:</span>
+                <select id="sim-speed-select" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 text-slate-200 text-xs">
+                  <option value="1">1x (Real-time)</option>
+                  <option value="10">10x</option>
+                  <option value="50">50x</option>
+                  <option value="100" selected>100x</option>
+                  <option value="500">500x</option>
+                  <option value="2000">2000x</option>
+                </select>
+              </div>
+
+              <button id="sim-play-pause" type="button" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-mono flex items-center transition-colors">
+                <i data-lucide="pause" class="w-3.5 h-3.5 mr-1 text-cyan-400"></i> Pause
+              </button>
+
+              <button id="sim-fit-btn" type="button" title="Auto Fit Orbit" class="p-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs transition-colors">
+                <i data-lucide="maximize" class="w-3.5 h-3.5"></i>
+              </button>
+              <button id="sim-reset-pan" type="button" title="Center View" class="p-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs transition-colors">
+                <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Canvas Element -->
+          <div class="w-full relative" style="height: 320px;">
+            <canvas id="orbit-sim-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+            <div class="absolute bottom-2.5 right-3 text-[10px] font-mono text-slate-400 bg-space-950/80 px-2.5 py-1 rounded border border-slate-800 pointer-events-none">
+              Mouse drag to pan &bull; Wheel to zoom &bull; Space to pause
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. KEPLERIAN GRAPHS -->
+        <div class="glass-panel rounded-2xl border border-cyan-500/20 p-5 space-y-4 shadow-2xl">
+          
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="line-chart" class="w-4 h-4 text-cyan-400"></i>
+              <h2 class="text-sm font-heading font-bold text-white uppercase tracking-wider">Keplerian Graphs</h2>
+            </div>
+
+            <!-- Range Filter -->
+            <div id="chart-range-group" class="flex items-center bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-[11px] font-mono">
+              <button type="button" data-range="leo" class="px-2 py-0.5 rounded text-slate-400 hover:text-white transition-all">LEO (2k km)</button>
+              <button type="button" data-range="meo" class="px-2 py-0.5 rounded bg-cyan-500 text-slate-950 font-bold transition-all">MEO (42k km)</button>
+              <button type="button" data-range="lunar" class="px-2 py-0.5 rounded text-slate-400 hover:text-white transition-all">All Orbits</button>
+            </div>
+          </div>
+
+          <!-- Dual Charts Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+            <!-- Chart 1: Orbital Radius vs Orbital Speed -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-semibold text-cyan-300 flex items-center gap-1">
+                  <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 inline-block"></span>
+                  Orbital Radius vs. Orbital Speed [r vs. v]
+                </span>
+                <span class="text-[10px] font-mono text-slate-400">v = √(GM / r)</span>
+              </div>
+              <div class="relative w-full bg-space-950/80 p-3 rounded-xl border border-slate-800/80" style="position: relative; height: 260px;">
+                <canvas id="chart-speed-canvas" class="w-full h-full block"></canvas>
+              </div>
+            </div>
+
+            <!-- Chart 2: Orbital Radius vs Time Period -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-semibold text-purple-300 flex items-center gap-1">
+                  <span class="w-2.5 h-2.5 rounded-full bg-purple-400 inline-block"></span>
+                  Orbital Radius vs. Time Period [r vs. T]
+                </span>
+                <span class="text-[10px] font-mono text-slate-400">T = 2π√(r³ / GM)</span>
+              </div>
+              <div class="relative w-full bg-space-950/80 p-3 rounded-xl border border-slate-800/80" style="position: relative; height: 260px;">
+                <canvas id="chart-period-canvas" class="w-full h-full block"></canvas>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Application Logic Modules -->
+  <script type="module" src="js/app.js"></script>
+
+</body>
+</html>
