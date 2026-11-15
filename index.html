@@ -382,6 +382,11 @@ input[type="range"].aerospace-slider::-moz-range-thumb {
             </span>
             <span id="calc-timestamp" class="text-cyan-400/80">Auto-synced</span>
           </div>
+          <!-- Add to Spreadsheet Button -->
+          <button id="btn-add-to-sheet" type="button" class="w-full py-2.5 px-4 rounded-xl font-heading font-semibold text-xs uppercase tracking-wider bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 flex items-center justify-center gap-2 transition-all">
+            <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-400"></i>
+            <span>Add Active Calculation to Spreadsheet</span>
+          </button>
 
         </div>
 
@@ -560,7 +565,7 @@ input[type="range"].aerospace-slider::-moz-range-thumb {
 
     </div>
 
-    <!-- ================= ORBITAL MECHANICS SPREADSHEET & DATA TABLE ================= -->
+        <!-- ================= ORBITAL SPEED & PERIOD SPREADSHEET ================= -->
     <section id="spreadsheet-section" class="mt-8 glass-panel rounded-2xl border border-cyan-500/20 p-5 lg:p-7 shadow-2xl space-y-6 transition-all">
       
       <!-- Section Header -->
@@ -574,22 +579,26 @@ input[type="range"].aerospace-slider::-moz-range-thumb {
           <div>
             <div class="flex items-center gap-2 flex-wrap">
               <h2 class="text-base lg:text-lg font-heading font-bold text-white uppercase tracking-wider">
-                Orbital Mechanics Spreadsheet &amp; Data Table
+                Orbital Speed &amp; Period Spreadsheet
               </h2>
-              <span class="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-[10px] font-mono uppercase font-semibold">
-                Option: Show All Calculations Active
+              <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-mono uppercase font-semibold">
+                User Calculations Model
               </span>
             </div>
             <p class="text-xs text-slate-400 mt-0.5">
-              Calculates circular orbital speed (\(v\)), period (\(T\)), daily revolutions, specific energy, escape velocity, and gravity using given Earth parameters.
+              Calculates circular orbital speed (v) and period (T) for your selected orbital radii using given Earth parameters.
             </p>
           </div>
         </div>
 
         <div class="flex items-center space-x-2 text-xs font-mono">
           <span id="sheet-row-count" class="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-cyan-400 font-semibold">
-            10 Orbits Listed
+            0 Calculations Added
           </span>
+          <button id="sheet-btn-clear" type="button" class="px-2.5 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-mono transition-all flex items-center gap-1" title="Clear all calculations">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            <span>Clear Table</span>
+          </button>
         </div>
       </div>
 
@@ -598,9 +607,9 @@ input[type="range"].aerospace-slider::-moz-range-thumb {
         <div class="flex items-center justify-between text-xs font-mono text-slate-400">
           <span class="flex items-center gap-1.5 uppercase font-semibold text-slate-300">
             <i data-lucide="globe" class="w-3.5 h-3.5 text-cyan-400"></i>
-            Given Earth &amp; Gravitational Parameters (Fixed Constants)
+            Given Earth Parameters (Constants Used Across All Calculations)
           </span>
-          <span class="text-[11px] text-slate-400">Standard Two-Body Model</span>
+          <span class="text-[11px] text-slate-400">Two-Body Circular Model</span>
         </div>
 
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs font-mono">
@@ -630,93 +639,80 @@ input[type="range"].aerospace-slider::-moz-range-thumb {
         </div>
       </div>
 
-      <!-- Add Custom Orbit Quick Bar -->
-      <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80 space-y-3">
+      <!-- Add Calculation Bar: Enter Orbital Radius or Altitude -->
+      <div class="bg-slate-900/60 p-4 rounded-xl border border-cyan-500/30 space-y-3">
         <div class="flex items-center justify-between text-xs font-semibold text-slate-200">
-          <span class="flex items-center gap-1.5">
-            <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-cyan-400"></i>
-            Add Custom Orbital Radius to Spreadsheet
+          <span class="flex items-center gap-1.5 text-cyan-300">
+            <i data-lucide="plus-circle" class="w-4 h-4 text-cyan-400"></i>
+            Add Your Selected Orbital Radius
           </span>
-          <span class="text-[10px] font-mono text-slate-400">Automatic real-time calculation</span>
+          <span class="text-[10px] font-mono text-slate-400">Calculates speed (v) and period (T) instantly</span>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
-          <div class="sm:col-span-5">
+          <div class="sm:col-span-4">
             <input 
               id="sheet-input-name" 
               type="text" 
-              placeholder="Orbit Name (e.g., Tiangong Space Station)" 
+              placeholder="Calculation Label (e.g., Orbit 1)" 
               class="w-full bg-slate-950 border border-slate-700/80 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors"
             >
           </div>
-          <div class="sm:col-span-4">
+          <div class="sm:col-span-3">
+            <div class="relative">
+              <input 
+                id="sheet-input-radius" 
+                type="number" 
+                min="6372" 
+                max="500000" 
+                step="any" 
+                placeholder="Orbital Radius r" 
+                class="w-full bg-slate-950 border border-purple-500/40 rounded-lg px-3 py-2 text-xs font-mono text-purple-300 placeholder-slate-500 focus:outline-none focus:border-purple-400 transition-colors"
+              >
+              <span class="absolute right-3 top-2 text-[11px] font-mono text-purple-400 font-semibold">km (r)</span>
+            </div>
+          </div>
+          <div class="sm:col-span-3">
             <div class="relative">
               <input 
                 id="sheet-input-alt" 
                 type="number" 
-                min="50" 
+                min="1" 
                 max="500000" 
                 step="any" 
-                placeholder="Altitude h (e.g., 380)" 
+                placeholder="Altitude h" 
                 class="w-full bg-slate-950 border border-slate-700/80 rounded-lg px-3 py-2 text-xs font-mono text-cyan-300 placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors"
               >
-              <span class="absolute right-3 top-2 text-[11px] font-mono text-slate-500">km</span>
+              <span class="absolute right-3 top-2 text-[11px] font-mono text-slate-500">km (h)</span>
             </div>
           </div>
-          <div class="sm:col-span-3">
+          <div class="sm:col-span-2">
             <button 
               id="sheet-btn-add-row" 
               type="button" 
               class="w-full py-2 px-3 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-heading font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-[0_0_12px_rgba(0,240,255,0.3)]"
             >
               <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-              <span>Add to Table</span>
+              <span>Add</span>
             </button>
           </div>
         </div>
       </div>
 
       <!-- Toolbar & Export Actions -->
-      <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 pt-1">
-        
-        <!-- Regime Filter Tabs -->
-        <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-mono overflow-x-auto">
-          <button type="button" data-regime="all" class="sheet-filter-btn px-3 py-1 rounded-lg bg-cyan-500 text-slate-950 font-bold transition-all whitespace-nowrap">
-            All Orbits
-          </button>
-          <button type="button" data-regime="leo" class="sheet-filter-btn px-3 py-1 rounded-lg text-slate-400 hover:text-white transition-all whitespace-nowrap">
-            LEO (&le; 2k km)
-          </button>
-          <button type="button" data-regime="meo" class="sheet-filter-btn px-3 py-1 rounded-lg text-slate-400 hover:text-white transition-all whitespace-nowrap">
-            MEO (2k - 35k km)
-          </button>
-          <button type="button" data-regime="geo" class="sheet-filter-btn px-3 py-1 rounded-lg text-slate-400 hover:text-white transition-all whitespace-nowrap">
-            GEO &amp; Beyond
-          </button>
-          <button type="button" data-regime="custom" class="sheet-filter-btn px-3 py-1 rounded-lg text-slate-400 hover:text-white transition-all whitespace-nowrap">
-            Custom
-          </button>
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
+        <div class="text-xs font-mono text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="info" class="w-3.5 h-3.5 text-cyan-400"></i>
+          <span>Only your added calculations appear in this spreadsheet.</span>
         </div>
 
-        <!-- Export & Display Mode Buttons Group -->
+        <!-- Export Buttons Group -->
         <div class="flex flex-wrap items-center gap-2">
-          
-          <!-- Show All Calculations Toggle Button -->
-          <button 
-            id="sheet-toggle-all-calcs" 
-            type="button" 
-            class="px-3 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-xs font-mono font-semibold flex items-center gap-1.5 transition-all shadow-sm"
-            title="Toggle between Compact View and All Calculations View"
-          >
-            <i data-lucide="check-square" class="w-3.5 h-3.5 text-cyan-400"></i>
-            <span>All Calculations Active</span>
-          </button>
-
           <button 
             id="sheet-export-excel" 
             type="button" 
             class="px-3 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-500/40 text-xs font-mono font-semibold flex items-center gap-1.5 transition-all shadow-sm"
-            title="Download true Microsoft Excel (.xlsx) file with all calculations"
+            title="Download Microsoft Excel (.xlsx) file with your calculations"
           >
             <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-400"></i>
             <span>Export Excel (.xlsx)</span>
@@ -726,7 +722,7 @@ input[type="range"].aerospace-slider::-moz-range-thumb {
             id="sheet-export-csv" 
             type="button" 
             class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-mono flex items-center gap-1.5 transition-all"
-            title="Download standard CSV spreadsheet file with all calculations"
+            title="Download CSV spreadsheet file with your calculations"
           >
             <i data-lucide="download" class="w-3.5 h-3.5 text-cyan-400"></i>
             <span>Download CSV</span>
@@ -758,7 +754,7 @@ input[type="range"].aerospace-slider::-moz-range-thumb {
       <!-- Copy Notification Toast -->
       <div id="sheet-copy-notification" class="hidden p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-mono flex items-center gap-2 animate-pulse">
         <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
-        <span>All spreadsheet calculations copied to clipboard in TSV format! Open Google Sheets or Microsoft Excel and press <strong>Ctrl+V</strong> to paste.</span>
+        <span>Calculations copied to clipboard! Paste directly into Google Sheets or Microsoft Excel (Ctrl+V).</span>
       </div>
 
       <!-- Formula Cheatsheet Drawer (Collapsible) -->
@@ -768,14 +764,14 @@ input[type="range"].aerospace-slider::-moz-range-thumb {
             <i data-lucide="calculator" class="w-4 h-4"></i>
             Excel &amp; Google Sheets Formula Syntax Reference
           </span>
-          <span class="text-[10px] text-slate-400">Copy formulas directly into your spreadsheet</span>
+          <span class="text-[10px] text-slate-400">Formulas used in this spreadsheet</span>
         </div>
 
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse text-slate-300">
             <thead>
               <tr class="border-b border-slate-800 text-[11px] text-slate-400 uppercase">
-                <th class="py-1.5 px-3">Column Parameter</th>
+                <th class="py-1.5 px-3">Parameter</th>
                 <th class="py-1.5 px-3">Physical Formula</th>
                 <th class="py-1.5 px-3">Excel / Google Sheets Formula</th>
                 <th class="py-1.5 px-3">Units</th>
@@ -783,70 +779,60 @@ input[type="range"].aerospace-slider::-moz-range-thumb {
             </thead>
             <tbody class="divide-y divide-slate-800/60 text-[11px]">
               <tr>
-                <td class="py-1.5 px-3 text-cyan-300 font-semibold">Orbital Radius (r)</td>
+                <td class="py-1.5 px-3 text-purple-300 font-semibold">Orbital Radius (r)</td>
                 <td class="py-1.5 px-3">r = R_Earth + h</td>
-                <td class="py-1.5 px-3 text-amber-300 font-mono">=$B$6 + C11</td>
+                <td class="py-1.5 px-3 text-amber-300 font-mono">=$B$6 + C10</td>
                 <td class="py-1.5 px-3 text-slate-400">km</td>
               </tr>
               <tr>
-                <td class="py-1.5 px-3 text-cyan-300 font-semibold">Orbital Speed (v)</td>
+                <td class="py-1.5 px-3 text-emerald-300 font-semibold">Orbital Speed (v)</td>
                 <td class="py-1.5 px-3">v = SQRT(mu / r) = SQRT((G * M) / r)</td>
-                <td class="py-1.5 px-3 text-emerald-300 font-mono">=SQRT($B$8 / D11)</td>
+                <td class="py-1.5 px-3 text-emerald-300 font-mono">=SQRT($B$8 / B10)</td>
                 <td class="py-1.5 px-3 text-slate-400">km/s</td>
               </tr>
               <tr>
-                <td class="py-1.5 px-3 text-cyan-300 font-semibold">Speed in km/h</td>
+                <td class="py-1.5 px-3 text-slate-300 font-semibold">Speed in km/h</td>
                 <td class="py-1.5 px-3">v * 3600</td>
-                <td class="py-1.5 px-3 text-emerald-300 font-mono">=E11 * 3600</td>
+                <td class="py-1.5 px-3 text-slate-300 font-mono">=D10 * 3600</td>
                 <td class="py-1.5 px-3 text-slate-400">km/h</td>
               </tr>
               <tr>
-                <td class="py-1.5 px-3 text-purple-300 font-semibold">Orbital Period (T)</td>
+                <td class="py-1.5 px-3 text-amber-300 font-semibold">Orbital Period (T)</td>
                 <td class="py-1.5 px-3">T = 2 * PI * SQRT(r^3 / mu)</td>
-                <td class="py-1.5 px-3 text-purple-300 font-mono">=2*PI()*SQRT((D11^3)/$B$8)</td>
+                <td class="py-1.5 px-3 text-amber-300 font-mono">=2*PI()*SQRT((B10^3)/$B$8)</td>
                 <td class="py-1.5 px-3 text-slate-400">seconds</td>
               </tr>
               <tr>
-                <td class="py-1.5 px-3 text-purple-300 font-semibold">Period in Minutes</td>
+                <td class="py-1.5 px-3 text-amber-400 font-semibold">Period in Minutes</td>
                 <td class="py-1.5 px-3">T_min = T_sec / 60</td>
-                <td class="py-1.5 px-3 text-purple-300 font-mono">=G11 / 60</td>
+                <td class="py-1.5 px-3 text-amber-400 font-mono">=G10 / 60</td>
                 <td class="py-1.5 px-3 text-slate-400">minutes</td>
               </tr>
               <tr>
-                <td class="py-1.5 px-3 text-purple-300 font-semibold">Period in Hours</td>
+                <td class="py-1.5 px-3 text-amber-400 font-semibold">Period in Hours</td>
                 <td class="py-1.5 px-3">T_hrs = T_min / 60</td>
-                <td class="py-1.5 px-3 text-purple-300 font-mono">=H11 / 60</td>
+                <td class="py-1.5 px-3 text-amber-400 font-mono">=E10 / 60</td>
                 <td class="py-1.5 px-3 text-slate-400">hours</td>
-              </tr>
-              <tr>
-                <td class="py-1.5 px-3 text-slate-300 font-semibold">Revolutions / Day</td>
-                <td class="py-1.5 px-3">f = 86400 / T_sec</td>
-                <td class="py-1.5 px-3 text-slate-300 font-mono">=86400 / G11</td>
-                <td class="py-1.5 px-3 text-slate-400">orbits / day</td>
-              </tr>
-              <tr>
-                <td class="py-1.5 px-3 text-rose-300 font-semibold">Specific Orbital Energy</td>
-                <td class="py-1.5 px-3">&epsilon; = -mu / (2 * r)</td>
-                <td class="py-1.5 px-3 text-rose-300 font-mono">=-$B$8 / (2 * D11)</td>
-                <td class="py-1.5 px-3 text-slate-400">MJ/kg</td>
-              </tr>
-              <tr>
-                <td class="py-1.5 px-3 text-indigo-300 font-semibold">Escape Velocity</td>
-                <td class="py-1.5 px-3">v_esc = SQRT(2 * mu / r)</td>
-                <td class="py-1.5 px-3 text-indigo-300 font-mono">=SQRT(2 * $B$8 / D11)</td>
-                <td class="py-1.5 px-3 text-slate-400">km/s</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- The Responsive Spreadsheet Table -->
+      <!-- The Clean Spreadsheet Table -->
       <div class="overflow-hidden rounded-xl border border-slate-800 bg-space-950/70 shadow-inner">
         <div class="overflow-x-auto max-h-[550px]">
           <table class="w-full text-left border-collapse">
-            <thead id="spreadsheet-thead" class="sticky top-0 bg-space-900 border-b border-slate-800 text-[11px] font-mono uppercase text-slate-400 z-10 shadow-sm">
-              <!-- Dynamically populated by SpreadsheetManager.renderHeader() -->
+            <thead class="sticky top-0 bg-space-900 border-b border-slate-800 text-[11px] font-mono uppercase text-slate-400 z-10 shadow-sm">
+              <tr>
+                <th class="px-4 py-3 font-semibold text-slate-300">Calculation Label</th>
+                <th class="px-4 py-3 font-semibold text-right text-purple-300">Orbital Radius r</th>
+                <th class="px-4 py-3 font-semibold text-right text-slate-300">Altitude h</th>
+                <th class="px-4 py-3 font-semibold text-right text-emerald-400">Orbital Speed v</th>
+                <th class="px-4 py-3 font-semibold text-right text-amber-300">Period (Minutes)</th>
+                <th class="px-4 py-3 font-semibold text-right text-amber-400">Period (Hours)</th>
+                <th class="px-4 py-3 font-semibold text-center text-cyan-400">Actions</th>
+              </tr>
             </thead>
             <tbody id="spreadsheet-tbody" class="divide-y divide-slate-800/60 font-mono text-xs">
               <!-- Dynamically populated by SpreadsheetManager -->
@@ -859,10 +845,10 @@ input[type="range"].aerospace-slider::-moz-range-thumb {
       <div class="flex flex-col sm:flex-row items-center justify-between text-[11px] font-mono text-slate-400 pt-1 px-1 gap-2">
         <span class="flex items-center gap-1.5">
           <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
-          Click <strong>Sync</strong> to load parameters into the visualizer, or <strong>Proof</strong> to view full calculation steps.
+          Click <strong>Load</strong> to view any calculation in the 2D visualizer, or add custom radii above.
         </span>
         <span class="text-slate-400">
-          Showing All Calculations: Speed, Period, Mach, Energy, Escape Velocity, and Gravity
+          Earth Parameters: R = 6,371 km &bull; μ = 398,600.44 km³/s²
         </span>
       </div>
 
@@ -2374,49 +2360,30 @@ class ChartsManager {
 
 // --- Spreadsheet Manager ---
 /**
- * Spreadsheet Manager Module
- * Provides an interactive tabular spreadsheet for orbital radii, speed, and period calculations.
- * Features:
- *   - Real-time calculations with Earth parameters
- *   - Preset orbital radii (LEO, MEO, GEO, Cislunar)
- *   - Custom user rows
- *   - "Show ALL Calculations" mode toggle (14 comprehensive orbital telemetry parameters)
- *   - Step-by-step mathematical proof / calculation inspector modal
- *   - 1-click sync with 2D Simulator, Calculator, and Graphs
- *   - Multi-format export: Excel (.xlsx), CSV (.csv), and Clipboard TSV for Google Sheets
+ * Spreadsheet Manager Module (Clean User Calculations Only)
+ * Allows users to add only the orbital radii and calculations they specify.
+ * No predefined GEO/LEO/MEO presets or extra regime clutter.
  */
 
 
 class SpreadsheetManager {
   constructor(app) {
     this.app = app;
-    this.currentRegime = 'all';
-    this.showAllCalculations = true; // Default to showing all calculations as requested!
 
-    // Base initial orbital datasets
-    this.defaultRows = [
-      { id: 'iss', name: 'ISS (International Space Station)', regime: 'LEO', altitudeKm: 420, isCustom: false },
-      { id: 'starlink', name: 'Starlink Constellation', regime: 'LEO', altitudeKm: 550, isCustom: false },
-      { id: 'hubble', name: 'Hubble Space Telescope', regime: 'LEO', altitudeKm: 570, isCustom: false },
-      { id: 'sso', name: 'Sun-Synchronous Earth Obs', regime: 'SSO', altitudeKm: 800, isCustom: false },
-      { id: 'leo-max', name: 'Upper LEO Boundary', regime: 'LEO', altitudeKm: 2000, isCustom: false },
-      { id: 'gps', name: 'GPS Navigation Constellation', regime: 'MEO', altitudeKm: 20200, isCustom: false },
-      { id: 'galileo', name: 'Galileo European Navigation', regime: 'MEO', altitudeKm: 23222, isCustom: false },
-      { id: 'geo', name: 'Geostationary Belt (GEO Clarke)', regime: 'GEO', altitudeKm: 35786, isCustom: false },
-      { id: 'molniya', name: 'Molniya Orbit (Apogee Altitude)', regime: 'HEO', altitudeKm: 39800, isCustom: false },
-      { id: 'cislunar', name: 'Lunar Distance (Cislunar Orbit)', regime: 'Cislunar', altitudeKm: 378029, isCustom: false }
-    ];
-
-    // Load custom rows from localStorage if available
-    this.customRows = [];
+    // Load user calculations from localStorage, or start with simple clean examples
+    this.rows = [];
     try {
-      const saved = localStorage.getItem('orbit_custom_spreadsheet_rows');
+      const saved = localStorage.getItem('user_custom_orbital_calculations');
       if (saved) {
-        this.customRows = JSON.parse(saved);
+        this.rows = JSON.parse(saved);
       }
     } catch (e) {
-      this.customRows = [];
+      this.rows = [];
     }
+
+    // Clean spreadsheet: starts empty so user adds only calculations they specify
+    // Any legacy preset items from older sessions are removed
+    this.rows = (this.rows || []).filter(item => item && !item.classTag && !String(item.id).startsWith('leo-') && !String(item.id).startsWith('meo-') && !String(item.id).startsWith('geo-') && !String(item.id).startsWith('heo-') && !String(item.id).startsWith('lunar-') && !String(item.id).startsWith('calc-'));
 
     this.cacheDOM();
     this.bindEvents();
@@ -2425,258 +2392,165 @@ class SpreadsheetManager {
 
   cacheDOM() {
     this.tbody = document.getElementById('spreadsheet-tbody');
-    this.thead = document.getElementById('spreadsheet-thead');
-    this.filterButtons = document.querySelectorAll('.sheet-filter-btn');
+    this.rowCountBadge = document.getElementById('sheet-row-count');
     this.btnExportExcel = document.getElementById('sheet-export-excel');
     this.btnExportCsv = document.getElementById('sheet-export-csv');
     this.btnCopySheets = document.getElementById('sheet-copy-sheets');
-    this.btnToggleFormulas = document.getElementById('sheet-toggle-formulas');
-    this.btnToggleAllCalcs = document.getElementById('sheet-toggle-all-calcs');
-    this.formulaGuide = document.getElementById('sheet-formula-guide');
+    this.btnClearAll = document.getElementById('sheet-btn-clear');
     this.btnAddRow = document.getElementById('sheet-btn-add-row');
-    this.inputCustomName = document.getElementById('sheet-input-name');
-    this.inputCustomAlt = document.getElementById('sheet-input-alt');
+    this.inputLabel = document.getElementById('sheet-input-name');
+    this.inputRadius = document.getElementById('sheet-input-radius');
+    this.inputAlt = document.getElementById('sheet-input-alt');
     this.copyNotification = document.getElementById('sheet-copy-notification');
-    this.rowCountBadge = document.getElementById('sheet-row-count');
-
-    // Step-by-Step Calculation Inspector Modal
-    this.calcModal = document.getElementById('calc-inspector-modal');
-    this.modalTitle = document.getElementById('modal-orbit-subtitle');
-    this.modalSteps = document.getElementById('modal-calc-steps');
-    this.modalBtnClose = document.getElementById('modal-btn-close');
-    this.modalBtnDone = document.getElementById('modal-btn-done');
-    this.modalBtnCopy = document.getElementById('modal-btn-copy');
-    this.btnShowMathBreakdown = document.getElementById('btn-show-math-breakdown');
-  }
-
-  getAllRows() {
-    return [...this.defaultRows, ...this.customRows];
-  }
-
-  getFilteredRows() {
-    const all = this.getAllRows();
-    if (this.currentRegime === 'all') return all;
-    if (this.currentRegime === 'leo') return all.filter(r => r.altitudeKm <= 2000);
-    if (this.currentRegime === 'meo') return all.filter(r => r.altitudeKm > 2000 && r.altitudeKm < 35786);
-    if (this.currentRegime === 'geo') return all.filter(r => r.altitudeKm >= 35786);
-    if (this.currentRegime === 'custom') return all.filter(r => r.isCustom);
-    return all;
+    this.btnAddFromCalc = document.getElementById('btn-add-to-sheet');
   }
 
   bindEvents() {
-    // Regime filtering
-    if (this.filterButtons) {
-      this.filterButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          this.filterButtons.forEach(b => {
-            b.classList.remove('bg-cyan-500', 'text-slate-950', 'font-bold');
-            b.classList.add('text-slate-400');
-          });
-          btn.classList.add('bg-cyan-500', 'text-slate-950', 'font-bold');
-          btn.classList.remove('text-slate-400');
-          this.currentRegime = btn.dataset.regime || 'all';
+    // 1. Add row from Spreadsheet input bar
+    if (this.btnAddRow) {
+      this.btnAddRow.addEventListener('click', () => this.handleAddRow());
+    }
+
+    // 2. Add current active calculator orbit
+    if (this.btnAddFromCalc) {
+      this.btnAddFromCalc.addEventListener('click', () => {
+        const alt = this.app ? this.app.altitudeKm : 420;
+        const bodyR = this.app && this.app.currentBody ? this.app.currentBody.radius : 6371.0;
+        const totalR = bodyR + alt;
+        const count = this.rows.length + 1;
+        this.addCalculation(`Calculation ${count}`, totalR, alt);
+      });
+    }
+
+    // 3. Clear All calculations
+    if (this.btnClearAll) {
+      this.btnClearAll.addEventListener('click', () => {
+        if (confirm('Clear all calculations from your spreadsheet?')) {
+          this.rows = [];
+          this.saveRows();
           this.render();
-        });
+        }
       });
     }
 
-    // Toggle All Calculations Mode
-    if (this.btnToggleAllCalcs) {
-      this.btnToggleAllCalcs.addEventListener('click', () => {
-        this.showAllCalculations = !this.showAllCalculations;
-        this.updateToggleAllCalcsButton();
-        this.render();
-      });
-    }
-
-    // Toggle Formula Guide
-    if (this.btnToggleFormulas && this.formulaGuide) {
-      this.btnToggleFormulas.addEventListener('click', () => {
-        this.formulaGuide.classList.toggle('hidden');
-        if (window.lucide) lucide.createIcons();
-      });
-    }
-
-    // Export Excel
+    // 4. Export buttons
     if (this.btnExportExcel) {
       this.btnExportExcel.addEventListener('click', () => this.exportToExcel());
     }
-
-    // Export CSV
     if (this.btnExportCsv) {
       this.btnExportCsv.addEventListener('click', () => this.exportToCsv());
     }
-
-    // Copy to Clipboard (TSV)
     if (this.btnCopySheets) {
       this.btnCopySheets.addEventListener('click', () => this.copyToClipboard());
     }
 
-    // Add Custom Row
-    if (this.btnAddRow) {
-      this.btnAddRow.addEventListener('click', () => this.handleAddCustomRow());
-    }
-
-    // Calculation Inspector Modal Handlers
-    if (this.modalBtnClose) {
-      this.modalBtnClose.addEventListener('click', () => this.closeCalcModal());
-    }
-    if (this.modalBtnDone) {
-      this.modalBtnDone.addEventListener('click', () => this.closeCalcModal());
-    }
-    if (this.modalBtnCopy) {
-      this.modalBtnCopy.addEventListener('click', () => this.copyModalProof());
-    }
-    if (this.btnShowMathBreakdown) {
-      this.btnShowMathBreakdown.addEventListener('click', () => {
-        const alt = this.app ? this.app.altitudeKm : 420;
-        this.openCalcModal(alt, 'Active Calculator State');
+    // 5. Keep radius and altitude inputs synchronized in the add bar
+    if (this.inputRadius && this.inputAlt) {
+      this.inputRadius.addEventListener('input', (e) => {
+        const r = parseFloat(e.target.value);
+        if (!isNaN(r)) {
+          this.inputAlt.value = Math.max(0.1, r - 6371.0).toFixed(1);
+        }
       });
-    }
-
-    // Close modal on backdrop click
-    if (this.calcModal) {
-      this.calcModal.addEventListener('click', (e) => {
-        if (e.target === this.calcModal) this.closeCalcModal();
+      this.inputAlt.addEventListener('input', (e) => {
+        const h = parseFloat(e.target.value);
+        if (!isNaN(h)) {
+          this.inputRadius.value = (6371.0 + h).toFixed(1);
+        }
       });
     }
   }
 
-  updateToggleAllCalcsButton() {
-    if (!this.btnToggleAllCalcs) return;
-    if (this.showAllCalculations) {
-      this.btnToggleAllCalcs.classList.remove('bg-slate-800', 'text-slate-300');
-      this.btnToggleAllCalcs.classList.add('bg-cyan-500/20', 'text-cyan-300', 'border-cyan-500/40');
-      this.btnToggleAllCalcs.innerHTML = `
-        <i data-lucide="check-square" class="w-3.5 h-3.5 text-cyan-400"></i>
-        <span>All Calculations Active</span>
-      `;
-    } else {
-      this.btnToggleAllCalcs.classList.remove('bg-cyan-500/20', 'text-cyan-300', 'border-cyan-500/40');
-      this.btnToggleAllCalcs.classList.add('bg-slate-800', 'text-slate-300');
-      this.btnToggleAllCalcs.innerHTML = `
-        <i data-lucide="square" class="w-3.5 h-3.5 text-slate-400"></i>
-        <span>Show All Calculations</span>
-      `;
-    }
-    if (window.lucide) lucide.createIcons();
+  saveRows() {
+    try {
+      localStorage.setItem('user_custom_orbital_calculations', JSON.stringify(this.rows));
+    } catch (e) {}
   }
 
-  handleAddCustomRow() {
-    const name = this.inputCustomName ? this.inputCustomName.value.trim() : '';
-    const alt = this.inputCustomAlt ? parseFloat(this.inputCustomAlt.value) : NaN;
+  handleAddRow() {
+    const label = (this.inputLabel && this.inputLabel.value.trim()) 
+      ? this.inputLabel.value.trim() 
+      : `Calculation ${this.rows.length + 1}`;
 
-    if (!name || isNaN(alt) || alt <= 0) {
-      alert('Please enter a valid orbit name and a positive altitude in km.');
+    let radiusKm = this.inputRadius ? parseFloat(this.inputRadius.value) : NaN;
+    let altKm = this.inputAlt ? parseFloat(this.inputAlt.value) : NaN;
+
+    if (isNaN(radiusKm) && !isNaN(altKm)) {
+      radiusKm = 6371.0 + altKm;
+    } else if (!isNaN(radiusKm) && isNaN(altKm)) {
+      altKm = Math.max(0.1, radiusKm - 6371.0);
+    } else if (isNaN(radiusKm) && isNaN(altKm)) {
+      alert('Please enter an Orbital Radius (r) or Altitude (h).');
       return;
     }
 
-    let regime = 'Custom';
-    if (alt <= 2000) regime = 'LEO';
-    else if (alt < 35786) regime = 'MEO';
-    else if (Math.abs(alt - 35786) < 500) regime = 'GEO';
-    else if (alt >= 300000) regime = 'Cislunar';
-    else regime = 'HEO';
+    if (radiusKm <= 6371.0) {
+      alert('Orbital Radius must be greater than Earth surface radius (6,371 km).');
+      return;
+    }
 
+    this.addCalculation(label, radiusKm, altKm);
+
+    if (this.inputLabel) this.inputLabel.value = '';
+    if (this.inputRadius) this.inputRadius.value = '';
+    if (this.inputAlt) this.inputAlt.value = '';
+  }
+
+  addCalculation(label, radiusKm, altKm) {
     const newRow = {
-      id: 'custom-' + Date.now(),
-      name: name,
-      regime: regime,
-      altitudeKm: alt,
-      isCustom: true
+      id: 'calc-' + Date.now(),
+      label: label,
+      radiusKm: radiusKm,
+      altitudeKm: altKm
     };
 
-    this.customRows.push(newRow);
-    try {
-      localStorage.setItem('orbit_custom_spreadsheet_rows', JSON.stringify(this.customRows));
-    } catch (e) {}
-
-    if (this.inputCustomName) this.inputCustomName.value = '';
-    if (this.inputCustomAlt) this.inputCustomAlt.value = '';
-
+    this.rows.push(newRow);
+    this.saveRows();
     this.render();
-  }
 
-  deleteCustomRow(id) {
-    this.customRows = this.customRows.filter(r => r.id !== id);
-    try {
-      localStorage.setItem('orbit_custom_spreadsheet_rows', JSON.stringify(this.customRows));
-    } catch (e) {}
-    this.render();
-  }
-
-  renderHeader() {
-    if (!this.thead) return;
-
-    if (this.showAllCalculations) {
-      // 14 Columns with ALL orbital calculation parameters
-      this.thead.innerHTML = `
-        <tr>
-          <th class="px-3.5 py-3 font-semibold text-slate-300 sticky left-0 bg-space-900 z-20">Satellite / Mission</th>
-          <th class="px-3 py-3 font-semibold text-center text-slate-300">Regime</th>
-          <th class="px-3 py-3 font-semibold text-right text-slate-300">Altitude h (km)</th>
-          <th class="px-3 py-3 font-semibold text-right text-purple-300">Radius r (km)</th>
-          <th class="px-3 py-3 font-semibold text-right text-emerald-400">Speed v (km/s)</th>
-          <th class="px-3 py-3 font-semibold text-right text-slate-400">Speed (km/h)</th>
-          <th class="px-3 py-3 font-semibold text-right text-slate-400">Mach No.</th>
-          <th class="px-3 py-3 font-semibold text-right text-amber-300">Period T (s)</th>
-          <th class="px-3 py-3 font-semibold text-right text-amber-300">Period (min)</th>
-          <th class="px-3 py-3 font-semibold text-right text-amber-400">Period (hrs)</th>
-          <th class="px-3 py-3 font-semibold text-right text-sky-400">Daily Orbits</th>
-          <th class="px-3 py-3 font-semibold text-right text-rose-300">Energy (MJ/kg)</th>
-          <th class="px-3 py-3 font-semibold text-right text-indigo-300">Escape v (km/s)</th>
-          <th class="px-3 py-3 font-semibold text-right text-teal-300">Gravity g (m/s²)</th>
-          <th class="px-3.5 py-3 font-semibold text-center text-cyan-400 sticky right-0 bg-space-900 z-20">Actions</th>
-        </tr>
-      `;
-    } else {
-      // Standard Compact View (9 Columns)
-      this.thead.innerHTML = `
-        <tr>
-          <th class="px-3.5 py-3 font-semibold text-slate-300 sticky left-0 bg-space-900 z-20">Satellite / Mission</th>
-          <th class="px-3.5 py-3 font-semibold text-center text-slate-300">Regime</th>
-          <th class="px-3.5 py-3 font-semibold text-right text-slate-300">Altitude h (km)</th>
-          <th class="px-3.5 py-3 font-semibold text-right text-purple-300">Radius r (km)</th>
-          <th class="px-3.5 py-3 font-semibold text-right text-emerald-400">Speed v (km/s)</th>
-          <th class="px-3.5 py-3 font-semibold text-right text-slate-400">Speed (km/h)</th>
-          <th class="px-3.5 py-3 font-semibold text-right text-amber-300">Period (min)</th>
-          <th class="px-3.5 py-3 font-semibold text-right text-amber-400">Period (hrs)</th>
-          <th class="px-3.5 py-3 font-semibold text-right text-slate-300">Daily Orbits</th>
-          <th class="px-3.5 py-3 font-semibold text-center text-cyan-400 sticky right-0 bg-space-900 z-20">Actions</th>
-        </tr>
-      `;
+    // Flash notification feedback if button clicked from calculator
+    if (this.btnAddFromCalc) {
+      const origText = this.btnAddFromCalc.innerHTML;
+      this.btnAddFromCalc.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-emerald-400"></i> Added to Spreadsheet!`;
+      if (window.lucide) lucide.createIcons();
+      setTimeout(() => {
+        this.btnAddFromCalc.innerHTML = origText;
+        if (window.lucide) lucide.createIcons();
+      }, 1800);
     }
+  }
+
+  deleteRow(id) {
+    this.rows = this.rows.filter(r => r.id !== id);
+    this.saveRows();
+    this.render();
   }
 
   render() {
     if (!this.tbody) return;
 
-    this.renderHeader();
-    this.updateToggleAllCalcsButton();
-
-    const rows = this.getFilteredRows();
-    const activeAlt = this.app ? this.app.altitudeKm : 420;
     const body = this.app ? this.app.currentBody : CELESTIAL_BODIES.earth;
+    const activeAlt = this.app ? this.app.altitudeKm : 420;
 
     if (this.rowCountBadge) {
-      this.rowCountBadge.textContent = `${rows.length} Orbits Listed • ${this.showAllCalculations ? 'All Calculations Shown' : 'Standard View'}`;
+      this.rowCountBadge.textContent = `${this.rows.length} Calculation${this.rows.length === 1 ? '' : 's'} Added`;
     }
 
     this.tbody.innerHTML = '';
 
-    if (rows.length === 0) {
-      const colSpan = this.showAllCalculations ? 15 : 10;
+    if (this.rows.length === 0) {
       this.tbody.innerHTML = `
         <tr>
-          <td colspan="${colSpan}" class="px-4 py-8 text-center text-slate-400 font-mono text-sm">
-            No orbits found in this regime category.
+          <td colspan="7" class="px-4 py-8 text-center text-slate-400 font-mono text-xs">
+            No calculations in your spreadsheet yet.<br>
+            <span class="text-cyan-400">Enter an orbital radius below or click "Add Active Calculation to Spreadsheet".</span>
           </td>
         </tr>
       `;
       return;
     }
 
-    rows.forEach(item => {
+    this.rows.forEach(item => {
       const orbit = calculateOrbit(item.altitudeKm, body);
       const isActive = Math.abs(item.altitudeKm - activeAlt) < 0.5;
 
@@ -2687,198 +2561,73 @@ class SpreadsheetManager {
           : 'hover:bg-slate-900/60 text-slate-300'
       }`;
 
-      // Badge style based on regime
-      let regimeBadgeColor = 'bg-slate-800 text-slate-300 border-slate-700';
-      if (item.regime === 'LEO') regimeBadgeColor = 'bg-cyan-500/15 text-cyan-400 border-cyan-500/30';
-      else if (item.regime === 'SSO') regimeBadgeColor = 'bg-teal-500/15 text-teal-300 border-teal-500/30';
-      else if (item.regime === 'MEO') regimeBadgeColor = 'bg-amber-500/15 text-amber-400 border-amber-500/30';
-      else if (item.regime === 'GEO') regimeBadgeColor = 'bg-purple-500/15 text-purple-400 border-purple-500/30';
-      else if (item.regime === 'Cislunar') regimeBadgeColor = 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30';
-
-      if (this.showAllCalculations) {
-        // ALL 14 Calculations Rendered
-        tr.innerHTML = `
-          <td class="px-3.5 py-3 whitespace-nowrap sticky left-0 ${isActive ? 'bg-space-950/95' : 'bg-space-950/90'} z-10">
-            <div class="flex items-center space-x-2">
-              ${isActive ? '<span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>' : ''}
-              <span class="font-semibold ${isActive ? 'text-cyan-300 font-bold' : 'text-slate-200'}">${item.name}</span>
-            </div>
-          </td>
-          <td class="px-3 py-3 whitespace-nowrap text-center">
-            <span class="px-2 py-0.5 rounded border text-[10px] font-bold ${regimeBadgeColor}">
-              ${item.regime}
-            </span>
-          </td>
-          <td class="px-3 py-3 text-right text-slate-300 whitespace-nowrap">
-            ${item.altitudeKm.toLocaleString(undefined, { maximumFractionDigits: 1 })}
-          </td>
-          <td class="px-3 py-3 text-right text-purple-300 font-semibold whitespace-nowrap">
-            ${orbit.totalRadiusKm.toLocaleString(undefined, { maximumFractionDigits: 1 })}
-          </td>
-          <td class="px-3 py-3 text-right text-emerald-400 font-bold whitespace-nowrap">
-            ${orbit.speedKms.toFixed(3)}
-          </td>
-          <td class="px-3 py-3 text-right text-slate-400 whitespace-nowrap">
-            ${orbit.speedKmh.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-          </td>
-          <td class="px-3 py-3 text-right text-slate-400 whitespace-nowrap">
-            Mach ${orbit.mach.toFixed(1)}
-          </td>
-          <td class="px-3 py-3 text-right text-amber-300 font-semibold whitespace-nowrap">
-            ${orbit.periodSec.toLocaleString(undefined, { maximumFractionDigits: 0 })}s
-          </td>
-          <td class="px-3 py-3 text-right text-amber-300 font-semibold whitespace-nowrap">
-            ${orbit.periodMin.toFixed(2)}m
-          </td>
-          <td class="px-3 py-3 text-right text-amber-400 whitespace-nowrap">
-            ${orbit.periodHours.toFixed(2)}h
-          </td>
-          <td class="px-3 py-3 text-right text-sky-400 font-semibold whitespace-nowrap">
-            ${orbit.orbitsPerDay.toFixed(2)}
-          </td>
-          <td class="px-3 py-3 text-right text-rose-300 whitespace-nowrap">
-            ${orbit.specificEnergyMJkg.toFixed(2)}
-          </td>
-          <td class="px-3 py-3 text-right text-indigo-300 whitespace-nowrap">
-            ${orbit.escapeVelocityKms.toFixed(3)}
-          </td>
-          <td class="px-3 py-3 text-right text-teal-300 whitespace-nowrap">
-            ${orbit.localGravity.toFixed(2)}
-          </td>
-          <td class="px-3.5 py-3 text-center whitespace-nowrap sticky right-0 ${isActive ? 'bg-space-950/95' : 'bg-space-950/90'} z-10">
-            <div class="flex items-center justify-center space-x-1.5">
-              <button 
-                type="button" 
-                data-alt="${item.altitudeKm}" 
-                class="sheet-load-btn px-2 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/40 text-cyan-300 hover:text-white border border-cyan-500/40 text-[11px] font-sans font-semibold transition-all flex items-center gap-1 shadow-sm"
-                title="Sync with simulator and graphs"
-              >
-                <i data-lucide="play" class="w-3 h-3"></i>
-                <span>Sync</span>
-              </button>
-              <button 
-                type="button" 
-                data-inspect-alt="${item.altitudeKm}" 
-                data-inspect-name="${item.name}"
-                class="sheet-inspect-btn px-2 py-1 rounded bg-purple-500/20 hover:bg-purple-500/40 text-purple-300 hover:text-white border border-purple-500/40 text-[11px] font-sans font-semibold transition-all flex items-center gap-1 shadow-sm"
-                title="Show step-by-step mathematical calculations for this orbit"
-              >
-                <i data-lucide="calculator" class="w-3 h-3"></i>
-                <span>Proof</span>
-              </button>
-              ${item.isCustom ? `
-                <button 
-                  type="button" 
-                  data-del="${item.id}" 
-                  class="sheet-del-btn p-1 rounded bg-rose-500/10 hover:bg-rose-500/30 text-rose-400 border border-rose-500/30 text-[11px] transition-all"
-                  title="Delete custom orbit"
-                >
-                  <i data-lucide="trash-2" class="w-3 h-3"></i>
-                </button>
-              ` : ''}
-            </div>
-          </td>
-        `;
-      } else {
-        // Standard Compact Mode
-        tr.innerHTML = `
-          <td class="px-3.5 py-3 whitespace-nowrap sticky left-0 ${isActive ? 'bg-space-950/95' : 'bg-space-950/90'} z-10">
-            <div class="flex items-center space-x-2">
-              ${isActive ? '<span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>' : ''}
-              <span class="font-semibold ${isActive ? 'text-cyan-300 font-bold' : 'text-slate-200'}">${item.name}</span>
-            </div>
-          </td>
-          <td class="px-3 py-3 whitespace-nowrap text-center">
-            <span class="px-2 py-0.5 rounded border text-[10px] font-bold ${regimeBadgeColor}">
-              ${item.regime}
-            </span>
-          </td>
-          <td class="px-3 py-3 text-right text-slate-300 whitespace-nowrap">
-            ${item.altitudeKm.toLocaleString(undefined, { maximumFractionDigits: 1 })}
-          </td>
-          <td class="px-3 py-3 text-right text-purple-300 font-semibold whitespace-nowrap">
-            ${orbit.totalRadiusKm.toLocaleString(undefined, { maximumFractionDigits: 1 })}
-          </td>
-          <td class="px-3 py-3 text-right text-emerald-400 font-bold whitespace-nowrap">
-            ${orbit.speedKms.toFixed(3)}
-          </td>
-          <td class="px-3 py-3 text-right text-slate-400 whitespace-nowrap">
-            ${orbit.speedKmh.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-          </td>
-          <td class="px-3 py-3 text-right text-amber-300 font-semibold whitespace-nowrap">
-            ${orbit.periodMin.toFixed(2)}
-          </td>
-          <td class="px-3 py-3 text-right text-amber-400 whitespace-nowrap">
-            ${orbit.periodHours.toFixed(2)}
-          </td>
-          <td class="px-3 py-3 text-right text-slate-300 whitespace-nowrap">
-            ${orbit.orbitsPerDay.toFixed(2)}
-          </td>
-          <td class="px-3.5 py-3 text-center whitespace-nowrap sticky right-0 ${isActive ? 'bg-space-950/95' : 'bg-space-950/90'} z-10">
-            <div class="flex items-center justify-center space-x-1.5">
-              <button 
-                type="button" 
-                data-alt="${item.altitudeKm}" 
-                class="sheet-load-btn px-2 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/40 text-cyan-300 hover:text-white border border-cyan-500/40 text-[11px] font-sans font-semibold transition-all flex items-center gap-1 shadow-sm"
-                title="Sync with simulator and graphs"
-              >
-                <i data-lucide="play" class="w-3 h-3"></i>
-                <span>Sync</span>
-              </button>
-              <button 
-                type="button" 
-                data-inspect-alt="${item.altitudeKm}" 
-                data-inspect-name="${item.name}"
-                class="sheet-inspect-btn px-2 py-1 rounded bg-purple-500/20 hover:bg-purple-500/40 text-purple-300 hover:text-white border border-purple-500/40 text-[11px] font-sans font-semibold transition-all flex items-center gap-1 shadow-sm"
-                title="Show step-by-step mathematical calculations for this orbit"
-              >
-                <i data-lucide="calculator" class="w-3 h-3"></i>
-                <span>Proof</span>
-              </button>
-              ${item.isCustom ? `
-                <button 
-                  type="button" 
-                  data-del="${item.id}" 
-                  class="sheet-del-btn p-1 rounded bg-rose-500/10 hover:bg-rose-500/30 text-rose-400 border border-rose-500/30 text-[11px] transition-all"
-                  title="Delete custom orbit"
-                >
-                  <i data-lucide="trash-2" class="w-3 h-3"></i>
-                </button>
-              ` : ''}
-            </div>
-          </td>
-        `;
-      }
+      tr.innerHTML = `
+        <td class="px-4 py-3 whitespace-nowrap">
+          <div class="flex items-center space-x-2">
+            ${isActive ? '<span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>' : ''}
+            <span class="font-semibold ${isActive ? 'text-cyan-300 font-bold' : 'text-slate-200'}">${item.label}</span>
+          </div>
+        </td>
+        <td class="px-4 py-3 text-right text-purple-300 font-bold whitespace-nowrap">
+          ${orbit.totalRadiusKm.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })} km
+        </td>
+        <td class="px-4 py-3 text-right text-slate-300 whitespace-nowrap">
+          ${orbit.altitudeKm.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })} km
+        </td>
+        <td class="px-4 py-3 text-right text-emerald-400 font-bold whitespace-nowrap">
+          ${orbit.speedKms.toFixed(3)} km/s
+          <span class="text-[10px] text-slate-400 font-normal block">${orbit.speedKmh.toLocaleString(undefined, { maximumFractionDigits: 0 })} km/h</span>
+        </td>
+        <td class="px-4 py-3 text-right text-amber-300 font-bold whitespace-nowrap">
+          ${orbit.periodMin.toFixed(2)} min
+        </td>
+        <td class="px-4 py-3 text-right text-amber-400 font-semibold whitespace-nowrap">
+          ${orbit.periodHours.toFixed(2)} hrs
+          <span class="text-[10px] text-slate-400 font-normal block">${orbit.periodSec.toLocaleString(undefined, { maximumFractionDigits: 0 })} sec</span>
+        </td>
+        <td class="px-4 py-3 text-center whitespace-nowrap">
+          <div class="flex items-center justify-center space-x-2">
+            <button 
+              type="button" 
+              data-alt="${item.altitudeKm}" 
+              class="sheet-load-btn px-2.5 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/40 text-cyan-300 hover:text-white border border-cyan-500/40 text-[11px] font-sans font-semibold transition-all flex items-center gap-1 shadow-sm"
+              title="Load this orbit into the calculator and 2D simulator"
+            >
+              <i data-lucide="play" class="w-3 h-3"></i>
+              <span>Load</span>
+            </button>
+            <button 
+              type="button" 
+              data-del="${item.id}" 
+              class="sheet-del-btn p-1 rounded bg-rose-500/10 hover:bg-rose-500/30 text-rose-400 border border-rose-500/30 text-[11px] transition-all"
+              title="Remove calculation"
+            >
+              <i data-lucide="trash-2" class="w-3 h-3"></i>
+            </button>
+          </div>
+        </td>
+      `;
 
       this.tbody.appendChild(tr);
     });
 
-    // Bind sync buttons
+    // Bind Load buttons
     this.tbody.querySelectorAll('.sheet-load-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const alt = parseFloat(btn.dataset.alt);
         if (this.app) {
           this.app.setAltitude(alt, 'spreadsheet-sync');
           if (this.app.visualizer) this.app.visualizer.autoFit();
-          this.render(); // Update active highlights
+          this.render();
         }
       });
     });
 
-    // Bind inspect/proof buttons
-    this.tbody.querySelectorAll('.sheet-inspect-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const alt = parseFloat(btn.dataset.inspectAlt);
-        const name = btn.dataset.inspectName;
-        this.openCalcModal(alt, name);
-      });
-    });
-
-    // Bind delete buttons
+    // Bind Delete buttons
     this.tbody.querySelectorAll('.sheet-del-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.dataset.del;
-        this.deleteCustomRow(id);
+        this.deleteRow(id);
       });
     });
 
@@ -2887,156 +2636,16 @@ class SpreadsheetManager {
     }
   }
 
-  openCalcModal(altKm, orbitName) {
-    if (!this.calcModal) return;
-
-    const body = this.app ? this.app.currentBody : CELESTIAL_BODIES.earth;
-    const orbit = calculateOrbit(altKm, body);
-
-    if (this.modalTitle) {
-      this.modalTitle.textContent = `${orbitName} • Altitude h = ${orbit.altitudeKm.toLocaleString()} km (Radius r = ${orbit.totalRadiusKm.toLocaleString()} km)`;
-    }
-
-    if (this.modalSteps) {
-      this.modalSteps.innerHTML = `
-        <!-- Given Parameters Card -->
-        <div class="bg-slate-900/90 p-4 rounded-xl border border-cyan-500/20 space-y-2">
-          <div class="text-[11px] uppercase tracking-wider text-cyan-400 font-bold flex items-center gap-1.5">
-            <i data-lucide="globe" class="w-3.5 h-3.5"></i>
-            Given Earth &amp; Gravitational Constants
-          </div>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
-            <div><span class="text-slate-400">Mass M:</span> <strong class="text-white">5.972 × 10²⁴ kg</strong></div>
-            <div><span class="text-slate-400">Radius R:</span> <strong class="text-white">6,371.0 km</strong></div>
-            <div><span class="text-slate-400">Constant G:</span> <strong class="text-white">6.6743 × 10⁻¹¹</strong></div>
-            <div><span class="text-slate-400">Param μ = GM:</span> <strong class="text-emerald-400">398,600.44 km³/s²</strong></div>
-          </div>
-        </div>
-
-        <!-- Step 1: Radius -->
-        <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
-          <div class="flex items-center justify-between text-slate-300 font-bold">
-            <span class="text-purple-400 flex items-center gap-1.5">
-              <span>Step 1:</span> Orbital Radius (r)
-            </span>
-            <span class="text-slate-400 font-normal">Formula: r = R_Earth + h</span>
-          </div>
-          <div class="text-slate-400 bg-space-950 p-2.5 rounded-lg border border-slate-800/80">
-            <div>r = 6,371.0 km + ${orbit.altitudeKm.toLocaleString()} km</div>
-            <div class="text-purple-300 font-bold mt-1">r = ${orbit.totalRadiusKm.toLocaleString()} km = ${orbit.totalRadiusMeters.toLocaleString()} meters</div>
-          </div>
-        </div>
-
-        <!-- Step 2: Orbital Speed -->
-        <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
-          <div class="flex items-center justify-between text-slate-300 font-bold">
-            <span class="text-emerald-400 flex items-center gap-1.5">
-              <span>Step 2:</span> Circular Orbital Speed (v)
-            </span>
-            <span class="text-slate-400 font-normal">Formula: v = √(μ / r) = √(G·M / r)</span>
-          </div>
-          <div class="text-slate-400 bg-space-950 p-2.5 rounded-lg border border-slate-800/80">
-            <div>v = √(398,600.44 km³/s² / ${orbit.totalRadiusKm.toFixed(1)} km)</div>
-            <div class="text-emerald-300 font-bold mt-1">v = ${orbit.speedKms.toFixed(3)} km/s</div>
-            <div class="text-slate-400 text-[10px] mt-0.5">
-              Converted: ${orbit.speedKmh.toLocaleString(undefined, { maximumFractionDigits: 0 })} km/h • ${orbit.speedMph.toLocaleString(undefined, { maximumFractionDigits: 0 })} mph • Mach ${orbit.mach.toFixed(1)}
-            </div>
-          </div>
-        </div>
-
-        <!-- Step 3: Orbital Period -->
-        <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
-          <div class="flex items-center justify-between text-slate-300 font-bold">
-            <span class="text-amber-400 flex items-center gap-1.5">
-              <span>Step 3:</span> Orbital Period (T)
-            </span>
-            <span class="text-slate-400 font-normal">Formula: T = 2π √(r³ / μ) = 2πr / v</span>
-          </div>
-          <div class="text-slate-400 bg-space-950 p-2.5 rounded-lg border border-slate-800/80">
-            <div>T = 2 × π × √(${orbit.totalRadiusKm.toFixed(1)}³ / 398,600.44)</div>
-            <div class="text-amber-300 font-bold mt-1">T = ${orbit.periodSec.toFixed(1)} seconds</div>
-            <div class="text-amber-400 mt-0.5">
-              In Minutes: ${orbit.periodSec.toFixed(1)} / 60 = <strong>${orbit.periodMin.toFixed(2)} minutes</strong>
-            </div>
-            <div class="text-amber-400 mt-0.5">
-              In Hours: ${orbit.periodMin.toFixed(2)} / 60 = <strong>${orbit.periodHours.toFixed(2)} hours</strong> (${orbit.periodFormatted})
-            </div>
-          </div>
-        </div>
-
-        <!-- Step 4: Daily Orbits -->
-        <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
-          <div class="flex items-center justify-between text-slate-300 font-bold">
-            <span class="text-sky-400 flex items-center gap-1.5">
-              <span>Step 4:</span> Daily Orbits / Frequency (f)
-            </span>
-            <span class="text-slate-400 font-normal">Formula: f = 86,400 s / T_sec</span>
-          </div>
-          <div class="text-slate-400 bg-space-950 p-2.5 rounded-lg border border-slate-800/80">
-            <div>f = 86,400 / ${orbit.periodSec.toFixed(1)}</div>
-            <div class="text-sky-300 font-bold mt-1">f = ${orbit.orbitsPerDay.toFixed(2)} revolutions per standard 24-hour day</div>
-          </div>
-        </div>
-
-        <!-- Step 5: Advanced Telemetry -->
-        <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 space-y-2">
-          <div class="text-cyan-400 font-bold flex items-center gap-1.5">
-            <span>Step 5:</span> Advanced Orbital Mechanics Parameters
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-[11px]">
-            <div class="bg-space-950 p-2 rounded border border-slate-800">
-              <span class="text-slate-400 block text-[10px]">Specific Orbital Energy (ε = -μ/2r):</span>
-              <strong class="text-rose-300">${orbit.specificEnergyMJkg.toFixed(2)} MJ/kg</strong>
-            </div>
-            <div class="bg-space-950 p-2 rounded border border-slate-800">
-              <span class="text-slate-400 block text-[10px]">Escape Velocity (v_esc = √2 · v):</span>
-              <strong class="text-indigo-300">${orbit.escapeVelocityKms.toFixed(3)} km/s</strong>
-            </div>
-            <div class="bg-space-950 p-2 rounded border border-slate-800">
-              <span class="text-slate-400 block text-[10px]">Gravity at Altitude (g = μ/r²):</span>
-              <strong class="text-teal-300">${orbit.localGravity.toFixed(3)} m/s² (${(orbit.gravityRatio * 100).toFixed(1)}% of 1g)</strong>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    this.calcModal.classList.remove('hidden');
-    if (window.lucide) lucide.createIcons();
-  }
-
-  closeCalcModal() {
-    if (this.calcModal) {
-      this.calcModal.classList.add('hidden');
-    }
-  }
-
-  copyModalProof() {
-    if (!this.modalSteps) return;
-    const text = this.modalSteps.innerText;
-    navigator.clipboard.writeText(text).then(() => {
-      if (this.modalBtnCopy) {
-        const orig = this.modalBtnCopy.innerHTML;
-        this.modalBtnCopy.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i> Copied!`;
-        if (window.lucide) lucide.createIcons();
-        setTimeout(() => {
-          this.modalBtnCopy.innerHTML = orig;
-          if (window.lucide) lucide.createIcons();
-        }, 2000);
-      }
-    });
-  }
-
   exportToExcel() {
-    const rows = this.getAllRows();
+    if (!this.rows || this.rows.length === 0) { alert("Please add at least one calculation to the spreadsheet before exporting."); return; }
     const body = this.app ? this.app.currentBody : CELESTIAL_BODIES.earth;
 
     if (window.XLSX) {
       const wb = XLSX.utils.book_new();
 
       const wsData = [
-        ["EARTH SATELLITE CIRCULAR ORBIT CALCULATOR SPREADSHEET - ALL CALCULATIONS"],
-        ["Calculates circular orbital speed, period, daily frequency, energy, and escape velocity using given Earth parameters"],
+        ["CIRCULAR ORBITAL SPEED & PERIOD SPREADSHEET"],
+        ["Calculates circular orbital speed (v) and period (T) for selected orbital radii using given Earth parameters"],
         [],
         ["GIVEN EARTH PARAMETERS:"],
         ["Earth Mass (M)", body.mass, "kg"],
@@ -3045,109 +2654,88 @@ class SpreadsheetManager {
         ["Standard Gravitational Parameter (mu = GM)", 398600.44, "km^3 / s^2"],
         [],
         [
-          "Orbit Mission / Preset",
-          "Regime",
-          "Altitude h (km)",
+          "Calculation Label",
           "Orbital Radius r (km)",
+          "Altitude h (km)",
           "Orbital Speed v (km/s)",
           "Speed (km/h)",
-          "Speed (mph)",
-          "Mach No.",
-          "Period T (Seconds)",
           "Period T (Minutes)",
           "Period T (Hours)",
-          "Period (Days)",
-          "Revolutions / Day",
-          "Specific Energy (MJ/kg)",
-          "Escape Velocity (km/s)",
-          "Gravitational Accel g (m/s^2)",
-          "Gravity Ratio (% of 1g)"
+          "Period T (Seconds)"
         ]
       ];
 
-      // Add Data rows with ALL calculations
-      rows.forEach(r => {
+      this.rows.forEach(r => {
         const orbit = calculateOrbit(r.altitudeKm, body);
         wsData.push([
-          r.name,
-          r.regime,
-          r.altitudeKm,
+          r.label,
           orbit.totalRadiusKm,
+          orbit.altitudeKm,
           parseFloat(orbit.speedKms.toFixed(3)),
           parseFloat(orbit.speedKmh.toFixed(1)),
-          parseFloat(orbit.speedMph.toFixed(1)),
-          parseFloat(orbit.mach.toFixed(1)),
-          parseFloat(orbit.periodSec.toFixed(1)),
           parseFloat(orbit.periodMin.toFixed(2)),
           parseFloat(orbit.periodHours.toFixed(2)),
-          parseFloat(orbit.periodDays.toFixed(4)),
-          parseFloat(orbit.orbitsPerDay.toFixed(2)),
-          parseFloat(orbit.specificEnergyMJkg.toFixed(2)),
-          parseFloat(orbit.escapeVelocityKms.toFixed(3)),
-          parseFloat(orbit.localGravity.toFixed(3)),
-          parseFloat((orbit.gravityRatio * 100).toFixed(1))
+          parseFloat(orbit.periodSec.toFixed(1))
         ]);
       });
 
       // Add formula notes
       wsData.push([]);
-      wsData.push(["FORMULA SPECIFICATION (EXCEL & GOOGLE SHEETS):"]);
-      wsData.push(["Orbital Radius r", "= R_Earth + h", "= $B$6 + C10"]);
-      wsData.push(["Orbital Speed v (km/s)", "= SQRT(mu / r)", "= SQRT($B$8 / D10)"]);
-      wsData.push(["Orbital Speed (km/h)", "= v * 3600", "= E10 * 3600"]);
-      wsData.push(["Orbital Period T (s)", "= 2 * PI * SQRT(r^3 / mu)", "= 2*PI()*SQRT((D10^3)/$B$8)"]);
-      wsData.push(["Period T (min)", "= T_seconds / 60", "= I10 / 60"]);
-      wsData.push(["Period T (hrs)", "= T_minutes / 60", "= J10 / 60"]);
-      wsData.push(["Daily Revolutions", "= 86400 / T_seconds", "= 86400 / I10"]);
-      wsData.push(["Specific Orbital Energy", "= -mu / (2 * r)", "= -$B$8 / (2 * D10)"]);
-      wsData.push(["Escape Velocity", "= SQRT(2 * mu / r)", "= SQRT(2 * $B$8 / D10)"]);
-      wsData.push(["Gravitational Accel g", "= (mu / r^2) * 1000", "= ($B$8 / (D10^2)) * 1000"]);
+      wsData.push(["EXCEL FORMULA SPECIFICATION:"]);
+      wsData.push(["Orbital Speed v (km/s)", "= SQRT(mu / r)", "= SQRT($B$8 / B10)"]);
+      wsData.push(["Orbital Speed (km/h)", "= v * 3600", "= D10 * 3600"]);
+      wsData.push(["Orbital Period T (s)", "= 2 * PI * SQRT(r^3 / mu)", "= 2*PI()*SQRT((B10^3)/$B$8)"]);
+      wsData.push(["Period T (min)", "= T_seconds / 60", "= H10 / 60"]);
+      wsData.push(["Period T (hrs)", "= T_minutes / 60", "= F10 / 60"]);
 
       const ws = XLSX.utils.aoa_to_sheet(wsData);
-
-      // Auto-fit column widths
       ws['!cols'] = [
-        { wch: 34 }, { wch: 10 }, { wch: 15 }, { wch: 18 },
-        { wch: 18 }, { wch: 16 }, { wch: 16 }, { wch: 12 },
-        { wch: 18 }, { wch: 18 }, { wch: 16 }, { wch: 16 },
-        { wch: 18 }, { wch: 20 }, { wch: 20 }, { wch: 22 }, { wch: 20 }
+        { wch: 25 }, { wch: 22 }, { wch: 18 }, { wch: 22 },
+        { wch: 18 }, { wch: 20 }, { wch: 18 }, { wch: 20 }
       ];
 
-      XLSX.utils.book_append_sheet(wb, ws, "All_Orbital_Calculations");
-      XLSX.writeFile(wb, "satellite_orbit_all_calculations_spreadsheet.xlsx");
+      XLSX.utils.book_append_sheet(wb, ws, "Orbital_Calculations");
+      XLSX.writeFile(wb, "satellite_orbit_speed_period_spreadsheet.xlsx");
     } else {
       this.exportToCsv();
     }
   }
 
   exportToCsv() {
-    const rows = this.getAllRows();
+    if (!this.rows || this.rows.length === 0) { alert("Please add at least one calculation to the spreadsheet before exporting."); return; }
     const body = this.app ? this.app.currentBody : CELESTIAL_BODIES.earth;
 
-    let csv = "SATELLITE ORBIT CIRCULAR SPEED & PERIOD SPREADSHEET - ALL CALCULATIONS\n";
-    csv += `"Earth Parameters: Mass M = ${body.mass} kg | Radius R = ${body.radius} km | G = 6.67430e-11 m^3/(kg*s^2) | mu = 398600.44 km^3/s^2"\n\n`;
-    csv += `"Orbit Mission","Regime","Altitude h (km)","Orbital Radius r (km)","Orbital Speed v (km/s)","Speed (km/h)","Speed (mph)","Mach","Period T (s)","Period T (min)","Period T (hrs)","Daily Orbits","Energy (MJ/kg)","Escape v (km/s)","Gravity g (m/s^2)"\n`;
+    let csv = "CIRCULAR ORBITAL SPEED & PERIOD SPREADSHEET
+";
+    csv += `"Earth Parameters: Mass M = ${body.mass} kg | Radius R = ${body.radius} km | G = 6.67430e-11 m^3/(kg*s^2) | mu = 398600.44 km^3/s^2"
 
-    rows.forEach(r => {
+`;
+    csv += `"Calculation Label","Orbital Radius r (km)","Altitude h (km)","Orbital Speed v (km/s)","Speed (km/h)","Period T (min)","Period T (hrs)","Period T (s)"
+`;
+
+    this.rows.forEach(r => {
       const orbit = calculateOrbit(r.altitudeKm, body);
-      csv += `"${r.name}","${r.regime}",${r.altitudeKm},${orbit.totalRadiusKm.toFixed(1)},${orbit.speedKms.toFixed(3)},${orbit.speedKmh.toFixed(1)},${orbit.speedMph.toFixed(1)},${orbit.mach.toFixed(1)},${orbit.periodSec.toFixed(1)},${orbit.periodMin.toFixed(2)},${orbit.periodHours.toFixed(2)},${orbit.orbitsPerDay.toFixed(2)},${orbit.specificEnergyMJkg.toFixed(2)},${orbit.escapeVelocityKms.toFixed(3)},${orbit.localGravity.toFixed(3)}\n`;
+      csv += `"${r.label}",${orbit.totalRadiusKm.toFixed(1)},${orbit.altitudeKm.toFixed(1)},${orbit.speedKms.toFixed(3)},${orbit.speedKmh.toFixed(1)},${orbit.periodMin.toFixed(2)},${orbit.periodHours.toFixed(2)},${orbit.periodSec.toFixed(1)}
+`;
     });
 
-    csv += `\n"FORMULA REFERENCE:"\n`;
-    csv += `"Orbital Radius r = R_Earth + h"\n`;
-    csv += `"Orbital Speed v = SQRT(mu / r)"\n`;
-    csv += `"Orbital Period T = 2 * PI * SQRT(r^3 / mu)"\n`;
-    csv += `"Period T (min) = T_sec / 60"\n`;
-    csv += `"Period T (hrs) = T_min / 60"\n`;
-    csv += `"Daily Revolutions = 86400 / T_sec"\n`;
-    csv += `"Specific Energy = -mu / (2 * r)"\n`;
-    csv += `"Escape Velocity = SQRT(2 * mu / r)"\n`;
+    csv += `
+"FORMULAS:"
+`;
+    csv += `"Orbital Speed v = SQRT(mu / r)"
+`;
+    csv += `"Orbital Period T = 2 * PI * SQRT(r^3 / mu)"
+`;
+    csv += `"Period (min) = T / 60"
+`;
+    csv += `"Period (hrs) = T / 3600"
+`;
 
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', 'satellite_orbit_all_calculations_spreadsheet.csv');
+    link.setAttribute('download', 'satellite_orbit_speed_period_spreadsheet.csv');
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -3155,14 +2743,16 @@ class SpreadsheetManager {
   }
 
   copyToClipboard() {
-    const rows = this.getAllRows();
+    if (!this.rows || this.rows.length === 0) { alert("Please add at least one calculation to the spreadsheet before exporting."); return; }
     const body = this.app ? this.app.currentBody : CELESTIAL_BODIES.earth;
 
-    let tsv = `Orbit Mission\tRegime\tAltitude h (km)\tOrbital Radius r (km)\tOrbital Speed v (km/s)\tSpeed (km/h)\tMach\tPeriod T (s)\tPeriod T (min)\tPeriod T (hrs)\tDaily Orbits\tEnergy (MJ/kg)\tEscape v (km/s)\tGravity g (m/s^2)\n`;
+    let tsv = `Calculation Label	Orbital Radius r (km)	Altitude h (km)	Orbital Speed v (km/s)	Speed (km/h)	Period T (min)	Period T (hrs)	Period T (s)
+`;
 
-    rows.forEach(r => {
+    this.rows.forEach(r => {
       const orbit = calculateOrbit(r.altitudeKm, body);
-      tsv += `${r.name}\t${r.regime}\t${r.altitudeKm}\t${orbit.totalRadiusKm.toFixed(1)}\t${orbit.speedKms.toFixed(3)}\t${orbit.speedKmh.toFixed(1)}\t${orbit.mach.toFixed(1)}\t${orbit.periodSec.toFixed(1)}\t${orbit.periodMin.toFixed(2)}\t${orbit.periodHours.toFixed(2)}\t${orbit.orbitsPerDay.toFixed(2)}\t${orbit.specificEnergyMJkg.toFixed(2)}\t${orbit.escapeVelocityKms.toFixed(3)}\t${orbit.localGravity.toFixed(3)}\n`;
+      tsv += `${r.label}	${orbit.totalRadiusKm.toFixed(1)}	${orbit.altitudeKm.toFixed(1)}	${orbit.speedKms.toFixed(3)}	${orbit.speedKmh.toFixed(1)}	${orbit.periodMin.toFixed(2)}	${orbit.periodHours.toFixed(2)}	${orbit.periodSec.toFixed(1)}
+`;
     });
 
     navigator.clipboard.writeText(tsv).then(() => {
@@ -3172,7 +2762,7 @@ class SpreadsheetManager {
           this.copyNotification.classList.add('hidden');
         }, 3000);
       } else {
-        alert('All orbital calculations copied to clipboard! Paste directly into Excel or Google Sheets (Ctrl+V).');
+        alert('Spreadsheet data copied to clipboard! Paste directly into Excel or Google Sheets (Ctrl+V).');
       }
     }).catch(err => {
       console.error('Failed to copy to clipboard', err);
